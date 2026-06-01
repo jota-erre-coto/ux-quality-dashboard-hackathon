@@ -91,21 +91,6 @@ El **UX Quality Dashboard** es la lente UX sobre Brain. No construye un ETL nuev
 
 ---
 
-## Datos corregidos respecto a versiones anteriores
-
-Versiones anteriores de este reto contienen datos incorrectos. Estos son los valores actualizados con datos reales de Brain (1 jun 2026):
-
-| Métrica | Valor anterior | **Valor correcto** | Fuente |
-|---|---|---|---|
-| CSAT B2C | 87,7% | **94%** | Brain CS Stats (Zendesk) |
-| CES | 9,64 | **9,7** | Brain dashboard |
-| NPS B2C | 9,36 | **9,3** | Brain Pilar 1 |
-| AOV B2C | €137,7 | **€135** | Brain Pilar 1 (semanal) |
-| CR web | 3,7% | **4,12%** | Brain Pilar 1 |
-| Funnel checkout por paso | Disponible | **Mock Data (no live)** | Brain Executive Funnels |
-
----
-
 ## Stack del MVP
 
 ```
