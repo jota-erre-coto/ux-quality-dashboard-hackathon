@@ -553,6 +553,86 @@ footer.footer--gradient {
 /* ─── DIVIDER ────────────────────────────────────────────────────── */
 .section-divider { border: none; border-top: 1px solid var(--line); margin: 0; }
 
+/* ─── HONEYCOMB GRID ─────────────────────────────────────────────── */
+.hc-intro { margin: 36px 0 24px; }
+.hc-intro h3 { font-size: 22px; font-weight: 700; color: var(--foreground); margin-bottom: 8px; }
+.hc-intro p { font-size: 15px; color: var(--foreground-light); line-height: 1.65; max-width: 680px; }
+.hc-7-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.hc-7-row2 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.hc-dim-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); padding: 20px;
+  box-shadow: var(--elevation-sm);
+  border-top: 3px solid var(--border);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.hc-dim-card.c-useful   { border-top-color: #F59E0B; }
+.hc-dim-card.c-usable   { border-top-color: var(--primary); }
+.hc-dim-card.c-findable { border-top-color: var(--info); }
+.hc-dim-card.c-desirable{ border-top-color: #8B5CF6; }
+.hc-dim-card.c-credible { border-top-color: var(--success); }
+.hc-dim-card.c-accessible{ border-top-color: #06B6D4; }
+.hc-dim-card.c-valuable { border-top-color: #10B981; }
+.hc-dim-emoji { font-size: 22px; }
+.hc-dim-name { font-size: 15px; font-weight: 700; color: var(--foreground); }
+.hc-dim-question { font-size: 12px; font-weight: 600; color: var(--foreground-lighter); font-style: italic; }
+.hc-dim-desc { font-size: 13px; color: var(--foreground-light); line-height: 1.5; }
+.hc-dim-kpi {
+  font-size: 11px; padding: 4px 10px; border-radius: var(--radius-pill);
+  background: var(--surface); color: var(--foreground-lighter);
+  font-weight: 600; align-self: flex-start; margin-top: 2px;
+}
+.hc-dim-card.c-useful    .hc-dim-kpi { background: #FEF3C7; color: #92400E; }
+.hc-dim-card.c-usable    .hc-dim-kpi { background: var(--primary-light); color: var(--primary); }
+.hc-dim-card.c-findable  .hc-dim-kpi { background: var(--info-light); color: var(--info); }
+.hc-dim-card.c-desirable .hc-dim-kpi { background: #EDE9FE; color: #5B21B6; }
+.hc-dim-card.c-credible  .hc-dim-kpi { background: var(--success-light); color: var(--success); }
+.hc-dim-card.c-accessible .hc-dim-kpi { background: #CFFAFE; color: #0E7490; }
+.hc-dim-card.c-valuable  .hc-dim-kpi { background: #D1FAE5; color: #065F46; }
+
+/* ─── DAY TASKS ──────────────────────────────────────────────────── */
+.day-tasks { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.day-task {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 12px 16px; background: var(--surface);
+  border-radius: var(--radius-md); border: 1px solid var(--line);
+}
+.day-task-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--foreground); color: #fff;
+  font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.day-task.pista-data .day-task-num { background: var(--info); }
+.day-task.pista-prod .day-task-num { background: var(--primary); }
+.day-task-content { flex: 1; }
+.day-task-title { font-size: 13px; font-weight: 700; color: var(--foreground); margin-bottom: 3px; }
+.day-task-desc { font-size: 12px; color: var(--foreground-light); line-height: 1.5; }
+.day-task-time {
+  font-size: 10px; font-weight: 700; letter-spacing: .4px;
+  text-transform: uppercase; color: var(--foreground-lighter);
+  white-space: nowrap; align-self: center; flex-shrink: 0;
+}
+.pista-header {
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+  text-transform: uppercase; padding: 6px 12px;
+  border-radius: var(--radius-sm); margin-bottom: 8px;
+  display: inline-block;
+}
+.pista-header.data { background: var(--info-light); color: var(--info); }
+.pista-header.prod { background: var(--primary-light); color: var(--primary); }
+
 /* ─── RESPONSIVE ─────────────────────────────────────────────────── */
 @media (max-width: 980px) {
   .hero h1 { font-size: 38px; }
@@ -565,6 +645,8 @@ footer.footer--gradient {
   .steps-grid { grid-template-columns: 1fr; }
   .step-two-col { grid-template-columns: 1fr; }
   .fact-grid { grid-template-columns: 1fr; }
+  .hc-7-grid { grid-template-columns: repeat(2, 1fr); }
+  .hc-7-row2 { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
   .wrap { padding: 0 20px; }
@@ -828,6 +910,69 @@ footer.footer--gradient {
         <span class="t-dim">Este es el "no tenemos idea de por qué" del MBR de Marzo, resuelto en vivo.</span>
       </div>
     </div>
+
+    <!-- ── HONEYCOMB 7 DIMENSIONES ── -->
+    <div class="hc-intro">
+      <span class="section-number" style="display:block;margin-bottom:8px">Framework de medición</span>
+      <h3>Las 7 dimensiones Honeycomb</h3>
+      <p>Cada dimensión representa un tipo distinto de calidad de experiencia. La Vista 1 las monitoriza todas con semáforo, tendencia y señal cualitativa. Cuando una cae, el drill-down lleva directo a la métrica que la arrastró y a las features de Gate 3 lanzadas en ese periodo.</p>
+    </div>
+
+    <div class="hc-7-grid">
+      <div class="hc-dim-card c-useful">
+        <div class="hc-dim-emoji">🎯</div>
+        <div class="hc-dim-name">Útil</div>
+        <div class="hc-dim-question">¿Resuelve necesidades reales?</div>
+        <div class="hc-dim-desc">El producto ofrece exactamente lo que el usuario viene a buscar. Un buscador que devuelve cero resultados, o una actividad sin disponibilidad sin alternativa, rompen esta dimensión aunque el negocio siga funcionando.</div>
+        <span class="hc-dim-kpi">Perfect Memories 70,7% · Zero-results buscador (gap)</span>
+      </div>
+      <div class="hc-dim-card c-usable">
+        <div class="hc-dim-emoji">🖱️</div>
+        <div class="hc-dim-name">Usable</div>
+        <div class="hc-dim-question">¿Completa la tarea sin fricción?</div>
+        <div class="hc-dim-desc">El usuario llega a donde quiere sin errores ni dudas. El checkout tiene un 77,19% de abandono global — eso es Usable en rojo, aunque el CR de negocio parezca aceptable desde Tableau.</div>
+        <span class="hc-dim-kpi">CR web 4,12% · CES 9,7 · Abandono checkout 77%</span>
+      </div>
+      <div class="hc-dim-card c-findable">
+        <div class="hc-dim-emoji">🔍</div>
+        <div class="hc-dim-name">Encontrable</div>
+        <div class="hc-dim-question">¿Encuentra lo que busca?</div>
+        <div class="hc-dim-desc">El contenido o la función están donde el usuario los espera. El CTR del buscador interno no existe como métrica en Civitatis — confirmado literalmente en Confluence. Los favoritos de App no aportan nada a la conversión (0,0%).</div>
+        <span class="hc-dim-kpi">CAT Landings pos. 5,1 · CTR buscador (gap) · Favoritos→CR 0%</span>
+      </div>
+      <div class="hc-dim-card c-desirable">
+        <div class="hc-dim-emoji">💜</div>
+        <div class="hc-dim-name">Deseable</div>
+        <div class="hc-dim-question">¿Genera apego? ¿Quiere volver?</div>
+        <div class="hc-dim-desc">El producto genera una respuesta emocional positiva. Un NPS de 9,3 que no sube al 9,4 del OKR y un rating de App de 2,9 frente a un benchmark de 4,7 son señales de Deseable bajo presión crónica.</div>
+        <span class="hc-dim-kpi">NPS 9,3 (0% OKR) · Ratings App 2,9 ⚠️ · Uninstalls iOS +63%</span>
+      </div>
+    </div>
+
+    <div class="hc-7-row2">
+      <div class="hc-dim-card c-credible">
+        <div class="hc-dim-emoji">🛡️</div>
+        <div class="hc-dim-name">Creíble</div>
+        <div class="hc-dim-question">¿El usuario confía?</div>
+        <div class="hc-dim-desc">El producto demuestra que merece confianza — precios transparentes, pagos que funcionan, incidencias que se resuelven. PIX Brasil y Mercado Pago México llevan semanas bloqueados: riesgo Creíble activo en LATAM.</div>
+        <span class="hc-dim-kpi">CES 9,7 · CSAT 94% · Auth LATAM 82% · PIX atascado ⚠️</span>
+      </div>
+      <div class="hc-dim-card c-accessible">
+        <div class="hc-dim-emoji">♿</div>
+        <div class="hc-dim-name">Accesible</div>
+        <div class="hc-dim-question">¿Funciona para todos?</div>
+        <div class="hc-dim-desc">El producto es utilizable por personas con diversidad funcional. Es la única dimensión con cero métricas técnicas en todos los segmentos. El Hito #11 de Design Ops lleva vacío desde el primer día — y la EAA es obligatoria desde junio 2025.</div>
+        <span class="hc-dim-kpi">VoC #accesibilidad vivo · Lighthouse / axe-core (roadmap)</span>
+      </div>
+      <div class="hc-dim-card c-valuable">
+        <div class="hc-dim-emoji">💰</div>
+        <div class="hc-dim-name">Valioso</div>
+        <div class="hc-dim-question">¿Genera valor mutuo?</div>
+        <div class="hc-dim-desc">El producto crea valor tanto para el usuario como para Civitatis. Es la dimensión mejor instrumentada hoy — pero sin la capa UX, no podemos saber qué decisiones de diseño mueven el AOV. Cayó de €155 a €135 y nadie supo por qué.</div>
+        <span class="hc-dim-kpi">NR Web €5,61M · AOV €135 (0% OKR) · NR App +8,1%</span>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -891,21 +1036,47 @@ footer.footer--gradient {
     </div>
 
     <div class="steps-wrapper">
-      <!-- Hora 0 -->
+
+      <!-- ── HORA 0 ── -->
       <div class="steps-grid">
         <div class="step-aside">
           <div class="step-aside-num">H0</div>
           <div class="step-aside-label">Hora 0</div>
-          <div class="step-aside-time">30 min · inicio del hackathon</div>
+          <div class="step-aside-time">09:00 · 30 min</div>
         </div>
         <div class="step-body">
-          <h3>Acordar el JSON de contrato</h3>
-          <p style="font-size:14px;color:var(--foreground-light);margin-bottom:14px;">El equipo acuerda el shape del JSON (métricas + conectores + valores). A partir de ahí, dos pistas paralelas que no dependen la una de la otra.</p>
-          <div class="step-result">Interfaz entre Pista Data y Pista Producto — sin este paso, nadie puede avanzar sin bloquear al otro</div>
+          <h3>Apertura y acuerdo de contrato</h3>
+          <div class="day-tasks">
+            <div class="day-task">
+              <span class="day-task-num">1</span>
+              <div class="day-task-content">
+                <div class="day-task-title">Briefing del equipo</div>
+                <div class="day-task-desc">Presentar el brain-data-map viewer (GitHub Pages) al equipo completo. Cada persona entiende de dónde viene cada dato, quién tiene acceso y qué pista lidera.</div>
+              </div>
+              <span class="day-task-time">09:00</span>
+            </div>
+            <div class="day-task">
+              <span class="day-task-num">2</span>
+              <div class="day-task-content">
+                <div class="day-task-title">Acordar el JSON de contrato</div>
+                <div class="day-task-desc">El equipo acuerda en 30 minutos el shape del JSON: qué métricas, qué conectores, qué valores de Mayo 2026. Es la interfaz entre Pista Data y Pista Producto. Sin este paso, nadie puede avanzar sin bloquear al otro.</div>
+              </div>
+              <span class="day-task-time">09:10</span>
+            </div>
+            <div class="day-task">
+              <span class="day-task-num">3</span>
+              <div class="day-task-content">
+                <div class="day-task-title">Resolver las 5 preguntas de la hora 0</div>
+                <div class="day-task-desc">¿Brain expone API REST o hay que ir a BigQuery directo? ¿El reto 360º App comparte sus tablas? ¿Están los Strategic Themes del VoC configurados? (Si no: Domingo Martín los activa en 10 minutos.)</div>
+              </div>
+              <span class="day-task-time">09:20</span>
+            </div>
+          </div>
+          <div class="step-result">Contrato acordado · pistas arrancadas · ningún bloqueo</div>
         </div>
       </div>
 
-      <!-- Día 1 -->
+      <!-- ── DÍA 1 ── -->
       <div class="steps-grid" style="margin-top:2px">
         <div class="step-aside" style="background:#1a0a2e">
           <div class="step-aside-num">D1</div>
@@ -913,61 +1084,143 @@ footer.footer--gradient {
           <div class="step-aside-time">El dashboard funciona con datos reales</div>
         </div>
         <div class="step-body">
-          <h3>Dos pistas en paralelo</h3>
+          <h3>Dos pistas en paralelo — sin bloquearse entre sí</h3>
           <div class="step-two-col">
-            <div class="step-track">
-              <div class="step-track-label">Pista Data</div>
-              <ul>
-                <li>Confirmar qué expone Brain vía API o BigQuery directo</li>
-                <li>Configurar Strategic Themes del VoC (10 min · Domingo Martín)</li>
-                <li>Conectar Play Console: crash rate, ANR, ratings</li>
-                <li>Entregar JSON de contrato con datos reales de Mayo</li>
-                <li>Coordinar con Dashboard 360º App para tablas Adjust/Stores/Braze</li>
-              </ul>
+            <div>
+              <span class="pista-header data">Pista Data</span>
+              <div class="day-tasks">
+                <div class="day-task pista-data">
+                  <span class="day-task-num">1</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">Conectar Brain / BigQuery</div>
+                    <div class="day-task-desc">Confirmar si Brain expone API REST o hay que ir directo a BigQuery. Obtener credenciales y probar la primera query (CR, AOV, NPS desde pillar/1).</div>
+                  </div>
+                </div>
+                <div class="day-task pista-data">
+                  <span class="day-task-num">2</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">Activar Brain VoC Strategic Themes</div>
+                    <div class="day-task-desc">Entrar en brain.civitatis.tech/contacts/voc/configuration y asignar los tags clave (#accesibilidad, #problemas_para_el_pago, #idioma) como Strategic Themes. 10 minutos — desbloquea Credible y Accessible.</div>
+                  </div>
+                </div>
+                <div class="day-task pista-data">
+                  <span class="day-task-num">3</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">Conectar Play Console API</div>
+                    <div class="day-task-desc">Service account para crash rate, ANR rate y App ratings. Con esto Usable App y Desirable App tienen datos live desde el día 1.</div>
+                  </div>
+                </div>
+                <div class="day-task pista-data">
+                  <span class="day-task-num">4</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">Entregar JSON de contrato poblado</div>
+                    <div class="day-task-desc">Poblar el JSON acordado en H0 con los valores reales de mayo de 2026. Entregar a Pista Producto para que reapunte los conectores de cached a live.</div>
+                  </div>
+                </div>
+                <div class="day-task pista-data">
+                  <span class="day-task-num">5</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">Coordinar con reto Dashboard 360º App</div>
+                    <div class="day-task-desc">Confirmar si sus tablas de Adjust/Stores/Braze en BigQuery son accesibles. Si sí, añadir conectores App a los KPIs de Useful y Desirable.</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="step-track">
-              <div class="step-track-label">Pista Producto</div>
-              <ul>
-                <li>Dashboard completo: 3 segmentos × 7 dimensiones × 2 columnas</li>
-                <li>Datos Brain precargados (CR 4,12% · CSAT 94% · Uninstalls iOS +63,5%…)</li>
-                <li>UX Health Index + Cobertura X/7 + tendencia vs Abril</li>
-                <li>2 entradas Gate 3 reales precargadas</li>
-                <li>Badges de fuente por métrica (Brain live · sin instrumentar)</li>
-              </ul>
+            <div>
+              <span class="pista-header prod">Pista Producto</span>
+              <div class="day-tasks">
+                <div class="day-task pista-prod">
+                  <span class="day-task-num">1</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">Dashboard data-driven con datos precargados</div>
+                    <div class="day-task-desc">3 segmentos × 7 dimensiones × 2 columnas (Negocio/Experiencia). Todos los valores reales de mayo de 2026 en el JSON. El dashboard es completamente funcional aunque todos los conectores sean "cached".</div>
+                  </div>
+                </div>
+                <div class="day-task pista-prod">
+                  <span class="day-task-num">2</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">UX Health Index + tendencia real vs Abril</div>
+                    <div class="day-task-desc">Index sobre estado de dimensiones (no promedio de crudas) + Cobertura X/7 + flechas ↑↓→ calculadas con el corte de Abril guardado. Drill-down a métrica funcionando.</div>
+                  </div>
+                </div>
+                <div class="day-task pista-prod">
+                  <span class="day-task-num">3</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">2 entradas Gate 3 reales precargadas</div>
+                    <div class="day-task-desc">Checkout 2 pasos v4.7.0 (Solvey, Usable + Valuable, antes/después reales) y Upsell Free Tour→Privado (Useful + Valuable, CR 21,39%). Demuestran el flujo completo del diseñador.</div>
+                  </div>
+                </div>
+                <div class="day-task pista-prod">
+                  <span class="day-task-num">4</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">Badges de fuente por métrica</div>
+                    <div class="day-task-desc">Cada fila lleva su badge: "Brain live", "API live" o "sin instrumentar". La demo enseña exactamente qué está conectado de verdad y qué es el roadmap.</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="step-result">Demo-able al final del día 1 aunque ningún conector esté live</div>
+          <div class="step-result">Demo-able al final del día 1 — con datos reales, aunque ningún conector esté live todavía</div>
         </div>
       </div>
 
-      <!-- Día 2 -->
+      <!-- ── DÍA 2 ── -->
       <div class="steps-grid" style="margin-top:2px">
         <div class="step-aside" style="background:#2a0a1e">
           <div class="step-aside-num">D2</div>
           <div class="step-aside-label">Día 2</div>
-          <div class="step-aside-time">Conectores reales + narrativa de demo</div>
+          <div class="step-aside-time">Conectores live + narrativa de demo</div>
         </div>
         <div class="step-body">
-          <h3>Conectores live + demo MCP</h3>
+          <h3>Encender conectores y ensayar la demo</h3>
           <div class="step-two-col">
-            <div class="step-track">
-              <div class="step-track-label">Pista Data</div>
-              <ul>
-                <li>Encender conectores: cached → brain:* / api:*</li>
-                <li>Goal: todo lo disponible en Brain/BigQuery = conexión real</li>
-                <li>Sin tocar UI — solo se reapunta el conector</li>
-              </ul>
+            <div>
+              <span class="pista-header data">Pista Data</span>
+              <div class="day-tasks">
+                <div class="day-task pista-data">
+                  <span class="day-task-num">1</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">Encender conectores brain:* y api:*</div>
+                    <div class="day-task-desc">Reapuntar cada métrica de cached a su conector real. Sin tocar la UI — solo cambia el conector en el JSON. Cada conexión que llega es upside: la demo nunca está en riesgo.</div>
+                  </div>
+                </div>
+                <div class="day-task pista-data">
+                  <span class="day-task-num">2</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">Verificar datos live en todas las dimensiones</div>
+                    <div class="day-task-desc">Objetivo: ≥5/7 dimensiones en B2C Web con dato real. Brain Pilar 1, CS Stats (Zendesk) y Product Surface son los tres conectores mínimos para una demo convincente.</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="step-track">
-              <div class="step-track-label">Pista Producto</div>
-              <ul>
-                <li>Endpoint MCP básico: lectura Salud UX + historial Gate 3</li>
-                <li>Ensayar narrativa de demo: "¿por qué cayó el AOV?" → Claude responde en vivo</li>
-                <li>Pulir badges y gap notes de cada dimensión</li>
-              </ul>
+            <div>
+              <span class="pista-header prod">Pista Producto</span>
+              <div class="day-tasks">
+                <div class="day-task pista-prod">
+                  <span class="day-task-num">1</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">Endpoint MCP básico</div>
+                    <div class="day-task-desc">Endpoint REST que responde a consultas sobre el estado de Salud UX y el historial de Gate 3. Base para que Claude pueda responder en vivo durante la presentación.</div>
+                  </div>
+                </div>
+                <div class="day-task pista-prod">
+                  <span class="day-task-num">2</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">Ensayar la narrativa de demo</div>
+                    <div class="day-task-desc">Preguntar a Claude: "¿por qué pudo caer el AOV en mayo?" El asistente cruza Salud UX + Gate 3 y devuelve hipótesis estructurada en vivo. Ensayar hasta que fluya natural ante el jurado.</div>
+                  </div>
+                </div>
+                <div class="day-task pista-prod">
+                  <span class="day-task-num">3</span>
+                  <div class="day-task-content">
+                    <div class="day-task-title">Pulir gap notes y formulario Gate 3</div>
+                    <div class="day-task-desc">Verificar que cada dimensión sin dato tiene su nota explicativa ("no existe como métrica", "Funnel en Mock Data"). El formulario Gate 3 funcional con sugerencia de dimensión asistida.</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="step-result">Demo con conexiones reales de Brain + narrativa MCP funcionando</div>
+          <div class="step-result">Demo con Brain live + narrativa MCP funcionando + Gate 3 completo</div>
         </div>
       </div>
     </div>
