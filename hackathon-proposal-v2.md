@@ -140,6 +140,22 @@ Eso es el "no tenemos idea de por qué" del MBR de Marzo, resuelto en vivo.
 
 ---
 
+### Las 7 dimensiones Honeycomb — qué mide cada una en Civitatis
+
+Cada dimensión representa un tipo distinto de calidad de experiencia. La Vista 1 las muestra todas con semáforo y tendencia. Cuando una cae, el drill-down lleva a la métrica que la arrastró y a las features de Gate 3 lanzadas en ese periodo.
+
+| Dimensión | Pregunta | En el contexto de Civitatis | KPI real Mayo 2026 |
+|---|---|---|---|
+| 🎯 **Útil** | ¿Resuelve necesidades reales? | Un buscador que devuelve cero resultados, o una actividad sin disponibilidad sin alternativa, rompe esta dimensión aunque el negocio siga funcionando. | Perfect Memories 70,7% · Zero-results buscador (gap) |
+| 🖱️ **Usable** | ¿Completa la tarea sin fricción? | El checkout tiene un 77,19% de abandono global — eso es Usable en rojo, aunque el CR de negocio parezca aceptable desde Tableau. | CR web 4,12% · CES 9,7 · Abandono checkout 77% |
+| 🔍 **Encontrable** | ¿Encuentra lo que busca? | El CTR del buscador interno no existe como métrica — confirmado en Confluence. Los favoritos de App no aportan nada a la conversión (0,0% de trips con reserva tenían favoritos). | CAT Landings pos. 5,1 · CTR buscador (gap) · Favoritos→CR 0% |
+| 💜 **Deseable** | ¿Genera apego? ¿Quiere volver? | Un NPS de 9,3 que no sube al 9,4 del OKR y un rating de App de 2,9 frente a un benchmark de 4,7 son señales de Deseable bajo presión crónica. | NPS 9,3 (0% OKR) · Ratings App 2,9 ⚠️ · Uninstalls iOS +63% |
+| 🛡️ **Creíble** | ¿El usuario confía? | PIX Brasil y Mercado Pago México bloqueados: riesgo Creíble activo en LATAM. El CSAT B2B de 95% convive con un NPS B2B de 35 — divergencia que solo la Vista 1 hace visible. | CES 9,7 · CSAT 94% · Auth LATAM 82% · PIX atascado ⚠️ |
+| ♿ **Accesible** | ¿Funciona para todos? | La única dimensión con cero métricas técnicas en todos los segmentos. El Hito #11 de Design Ops lleva vacío desde el primer día — y la EAA es obligatoria desde junio 2025. | VoC #accesibilidad (señal viva) · Lighthouse / axe-core (roadmap) |
+| 💰 **Valioso** | ¿Genera valor mutuo? | La dimensión mejor instrumentada hoy — pero sin la capa UX, no podemos saber qué decisiones de diseño mueven el AOV. Cayó de €155 a €135 y nadie supo por qué. | NR Web €5,61M · AOV €135 (0% OKR) · NR App +8,1% |
+
+---
+
 ## A quién da respuesta · 04
 
 | Usuario | Qué gana |
@@ -190,43 +206,49 @@ Eso es el "no tenemos idea de por qué" del MBR de Marzo, resuelto en vivo.
 
 ## Plan de implementación · 06
 
-### Hora 0 (inicio del hackathon): acordar el JSON de contrato
+### Hora 0 — 09:00 · 30 minutos
 
-El equipo acuerda en 30 minutos el shape del JSON de datos. A partir de ahí, **dos pistas paralelas que no se bloquean entre sí.**
+**1. Briefing del equipo** — Presentar el brain-data-map viewer al equipo completo. Cada persona entiende de dónde viene cada dato, quién tiene acceso y qué pista lidera.
 
----
+**2. Acordar el JSON de contrato** — El equipo define en 30 minutos el shape del JSON: qué métricas, qué conectores, qué valores de mayo 2026. Es la interfaz entre Pista Data y Pista Producto. Sin este paso, nadie puede avanzar sin bloquear al otro.
 
-### Día 1 — El dashboard funciona con datos reales precargados
-
-**Pista Data (persona de Data):**
-- Confirmar qué expone Brain vía API o BigQuery directamente
-- Preguntas críticas: ¿GA4→BigQuery activo? ¿Zendesk/NPS aterrizan en BQ? ¿dbt tiene modelos de CR/AOV/NR?
-- Configurar Strategic Themes del VoC en Brain (10 min — desbloquea señal de Credible y Accessible)
-- Conectar Play Console para crash rate y ANR rate
-- Entregar JSON de contrato poblado con datos reales de Mayo
-
-**Pista Producto (Jota + front):**
-- Dashboard completo con los 3 segmentos (B2C Web / App / B2B) y las 7 dimensiones Honeycomb
-- Datos reales de Brain precargados en el JSON (CR 4,12% · AOV €135 · NPS 9,3 · CSAT 94% · Perfect Memories 70,7% · Uninstalls iOS +63,5% ...)
-- UX Health Index + cobertura X/7 + tendencia ↑↓→ vs Abril
-- Drill-down: Index → dimensión → métrica
-- Badges de fuente por métrica (Brain live / API live / sin instrumentar)
-- 2 entradas Gate 3 reales precargadas: Checkout 2 pasos (Solvey) + Upsell Free Tour→Privado
-
-**Resultado al final del día 1:** dashboard demo-able completo aunque ningún conector esté live.
+**3. Resolver las 5 preguntas críticas** — ¿Brain expone API REST o hay que ir a BigQuery directo? ¿El reto 360º App comparte sus tablas? ¿Están los Strategic Themes del VoC configurados? (Si no: Domingo Martín los activa en 10 minutos.)
 
 ---
 
-### Día 2 — Conectores reales + narrativa de demo
+### Día 1 — El dashboard funciona con datos reales
+
+Dos pistas paralelas desde la hora 0. Ninguna bloquea a la otra.
 
 **Pista Data:**
-- Encender conectores: `cached` → `brain:*` / `api:*`
-- Goal: todo lo disponible en Brain/BigQuery = conexión real en la demo
-- Coordinación con reto Dashboard 360º App para acceder a sus tablas de Adjust/Stores/Braze en BigQuery
+
+1. **Conectar Brain / BigQuery** — Confirmar si Brain expone API REST o hay que ir directo a BigQuery. Obtener credenciales y probar la primera query (CR, AOV, NPS desde pillar/1).
+2. **Activar Brain VoC Strategic Themes** — Entrar en `brain.civitatis.tech/contacts/voc/configuration` y asignar los tags clave (#accesibilidad, #problemas_para_el_pago, #idioma). 10 minutos — desbloquea Credible y Accessible.
+3. **Conectar Play Console API** — Service account para crash rate, ANR rate y App ratings. Con esto Usable App y Desirable App tienen datos live desde el día 1.
+4. **Entregar JSON de contrato poblado** — Poblar el JSON con los valores reales de mayo de 2026 y entregar a Pista Producto para reapuntar los conectores de `cached` a live.
+5. **Coordinar con reto Dashboard 360º App** — Confirmar si sus tablas de Adjust/Stores/Braze en BigQuery son accesibles para los KPIs de Útil y Deseable App.
 
 **Pista Producto:**
-- Reapuntar conectores a live (sin tocar UI)
-- Endpoint MCP básico: lectura de estado de Salud UX + historial Gate 3
+
+1. **Dashboard data-driven con datos precargados** — 3 segmentos × 7 dimensiones × 2 columnas (Negocio/Experiencia). Todos los valores reales de mayo en el JSON. Funcional aunque todos los conectores sean `cached`.
+2. **UX Health Index + tendencia real vs Abril** — Index sobre estado de dimensiones (no promedio de crudas) + Cobertura X/7 + flechas ↑↓→ calculadas con el corte de Abril. Drill-down a métrica funcionando.
+3. **2 entradas Gate 3 reales precargadas** — Checkout 2 pasos v4.7.0 (Solvey, Usable + Valuable, antes/después reales) y Upsell Free Tour→Privado (Useful + Valuable, CR 21,39%). Demuestran el flujo completo.
+4. **Badges de fuente por métrica** — Cada fila lleva su badge: "Brain live", "API live" o "sin instrumentar". La demo enseña exactamente qué está conectado y qué es roadmap.
+
+**Resultado al final del día 1:** dashboard demo-able con datos reales, aunque ningún conector esté live todavía.
+
+---
+
+### Día 2 — Conectores live + narrativa de demo
+
+**Pista Data:**
+
+1. **Encender conectores `brain:*` y `api:*`** — Reapuntar cada métrica de `cached` a su conector real. Sin tocar la UI — solo cambia el conector en el JSON. Objetivo: ≥5/7 dimensiones en B2C Web con dato live.
+2. **Verificar datos live** — Brain Pilar 1, CS Stats (Zendesk) y Product Surface son los tres conectores mínimos para una demo convincente.
+
+**Pista Producto:**
+
+1. **Endpoint MCP básico** — Endpoint REST que responde consultas sobre el estado de Salud UX y el historial de Gate 3. Base para que Claude responda en vivo.
 - Ensayar la narrativa de demo del MBR: *"¿por qué cayó el AOV?"* → Claude responde en vivo
 - Pulir badges y gap notes de cada dimensión
 

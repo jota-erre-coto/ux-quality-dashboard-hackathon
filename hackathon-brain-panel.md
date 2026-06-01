@@ -71,11 +71,29 @@ React + Tailwind para la UI con dos vistas (Salud UX / Gate 3), filtros por segm
 
 **Plan de implementación**
 
-Hora 0: el equipo acuerda el JSON de contrato en 30 minutos. A partir de ahí, dos pistas paralelas que no se bloquean entre sí.
+Hora 0 (09:00 · 30 min): briefing del equipo con el brain-data-map viewer, acuerdo del JSON de contrato (interfaz entre pistas), resolver si Brain expone API REST o hay que ir a BigQuery directo. A partir de ahí, dos pistas paralelas que no se bloquean entre sí.
 
-Día 1 · Pista Data: confirmar qué expone Brain vía API o BigQuery directo, configurar Strategic Themes del VoC (10 min, owner Domingo Martín), conectar Play Console, entregar JSON de contrato con datos reales de mayo. Pista Producto: dashboard completo con los 3 segmentos y las 7 dimensiones, datos Brain precargados (CR 4,12% · AOV 135 € · NPS 9,3 · CSAT 94% · Perfect Memories 70,7% · Uninstalls iOS +63,5%), UX Health Index + tendencia vs abril, 2 entradas Gate 3 reales (Checkout 2 pasos v4.7.0 y Upsell Free Tour→Privado). Demo-able al final del día 1 aunque ningún conector esté live.
+Día 1 · Pista Data:
+1. Conectar Brain / BigQuery y probar la primera query (CR, AOV, NPS desde pillar/1).
+2. Activar Strategic Themes del VoC en brain.civitatis.tech/contacts/voc/configuration — 10 min, owner Domingo Martín. Desbloquea Credible y Accessible.
+3. Conectar Play Console API para crash rate, ANR rate y App ratings.
+4. Entregar JSON de contrato poblado con datos reales de mayo a Pista Producto.
+5. Coordinar con reto Dashboard 360º App para acceder a sus tablas en BigQuery.
 
-Día 2: encender conectores cached→live sin tocar UI, endpoint MCP básico, ensayar la narrativa de demo "¿por qué cayó el AOV?" con Claude respondiendo en vivo.
+Día 1 · Pista Producto:
+1. Dashboard data-driven completo: 3 segmentos × 7 dimensiones × 2 columnas (Negocio/Experiencia), datos Brain precargados (CR 4,12% · AOV 135 € · NPS 9,3 · CSAT 94% · Perfect Memories 70,7% · Uninstalls iOS +63,5%).
+2. UX Health Index + Cobertura X/7 + tendencia ↑↓→ vs abril + drill-down a métrica.
+3. 2 entradas Gate 3 reales precargadas: Checkout 2 pasos v4.7.0 (Solvey, Usable) y Upsell Free Tour→Privado.
+4. Badges de fuente por métrica: "Brain live", "API live" o "sin instrumentar".
+
+Resultado al final del día 1: dashboard demo-able con datos reales, aunque ningún conector esté live todavía.
+
+Día 2 · Pista Data: encender conectores cached→brain:*/api:* sin tocar UI. Objetivo: ≥5/7 dimensiones B2C Web con dato live (Brain Pilar 1 + CS Stats + Product Surface como mínimo).
+
+Día 2 · Pista Producto:
+1. Endpoint MCP básico: lectura de Salud UX + historial Gate 3 para que Claude responda en vivo.
+2. Ensayar la narrativa de demo: "¿por qué cayó el AOV?" → Claude cruza Salud UX + Gate 3 → hipótesis estructurada en vivo.
+3. Pulir gap notes y formulario Gate 3 con sugerencia de dimensión asistida.
 
 **Complejidad estimada**
 
