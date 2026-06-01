@@ -8,13 +8,13 @@
 
 ## ¿Qué es esto?
 
-El **UX Quality Dashboard** es la lente UX sobre Brain. No construye un ETL nuevo — lee de Brain (que ya integra BigQuery + Zendesk + VoC) y añade lo que Brain no tiene: el mapeo de cada dato a una dimensión de experiencia Honeycomb y el registro que conecta cada decisión de diseño con su impacto medido.
+El **UX Quality Dashboard** es la lente UX sobre Brain. No construye un ETL nuevo: lee de Brain (que ya integra BigQuery + Zendesk + VoC). Añade lo que Brain no tiene: el mapeo de cada dato a una dimensión Honeycomb y el registro que conecta cada decisión de diseño con su impacto medido.
 
 **Dos vistas, dos propósitos:**
 - **Salud UX** — termómetro permanente de las 7 dimensiones Honeycomb (Útil, Usable, Encontrable, Deseable, Creíble, Accesible, Valioso) para B2C Web, B2C App y B2B.
 - **Gate 3 · Impacto por Feature** — registro del diseñador en el momento del lanzamiento: qué dimensión se intervino, qué métrica se esperaba mover, cuánto se movió a los 14/30 días.
 
-**Owner:** Jose Ramón Coto Gallego ([@jota-erre-coto](https://github.com/jota-erre-coto)) · Head of UX, Civitatis
+**Owner:** Jota Coto ([@jota-erre-coto](https://github.com/jota-erre-coto)) · Head of UX, Civitatis
 
 ---
 
@@ -64,14 +64,15 @@ El **UX Quality Dashboard** es la lente UX sobre Brain. No construye un ETL nuev
 
 ### Antes de empezar (hora 0)
 
-1. Abrir el [Brain Data Map Viewer](https://jota-erre-coto.github.io/ux-quality-dashboard-hackathon/brain-data-map-viewer.html) en el navegador — es la referencia de datos durante todo el hackathon.
-2. Acordar con el equipo el **JSON de contrato** (ver `ux-quality-dashboard-model-v2.md` §6) — es la interfaz entre la Pista Data y la Pista Producto.
-3. Resolver las **5 preguntas de la hora 0** (ver `brain-data-map.md` §9 o el viewer §05).
-4. Arrancar las **dos pistas en paralelo** — nadie bloquea a nadie.
+1. Leer la [propuesta del reto](https://jota-erre-coto.github.io/ux-quality-dashboard-hackathon/hackathon-proposal.html) — problema, solución y plan. Es el punto de partida compartido.
+2. Abrir el [Brain Data Map Viewer](https://jota-erre-coto.github.io/ux-quality-dashboard-hackathon/brain-data-map-viewer.html) en el navegador — es la referencia de datos durante todo el hackathon.
+3. Acordar con el equipo el **JSON de contrato** (ver `ux-quality-dashboard-model-v2.md` §6) — es la interfaz entre la Pista Data y la Pista Producto.
+4. Resolver las **5 preguntas de la hora 0** (ver `brain-data-map.md` §9 o el viewer §05).
+5. Arrancar las **dos pistas en paralelo** — nadie bloquea a nadie.
 
 ### Pista Data (persona de Data)
 
-- Confirmar: ¿Brain expone API REST o hay que ir a BigQuery directamente?
+- Confirmar si Brain expone API REST o hay que ir a BigQuery directamente — decisión pendiente de resolver con el owner de Brain en la hora 0.
 - Configurar Strategic Themes del VoC en Brain (`/contacts/voc/configuration`) — 10 min, owner Domingo Martín.
 - Conectar Play Console API para crash rate, ANR rate y ratings App.
 - Poblar el JSON de contrato con datos reales de mayo de 2026.
@@ -86,13 +87,13 @@ El **UX Quality Dashboard** es la lente UX sobre Brain. No construye un ETL nuev
 
 > Abrir Claude, preguntar: *"¿Por qué pudo caer el AOV en mayo?"*
 >
-> El asistente cruza Salud UX (qué dimensiones bajaron en el periodo) + Gate 3 (qué features se lanzaron sobre esas dimensiones) y devuelve una hipótesis estructurada en vivo. Eso es el "no tenemos idea de por qué" del MBR de Marzo, resuelto en tiempo real.
+> El asistente cruza Salud UX (qué dimensiones bajaron en el periodo) + Gate 3 (qué features se lanzaron sobre esas dimensiones) y devuelve una hipótesis estructurada en vivo. Eso convierte el "no tenemos una idea clara de por qué" en una hipótesis accionable, en tiempo real.
 
 ---
 
 ## Datos corregidos respecto a versiones anteriores
 
-Si alguien tiene documentos anteriores de este reto, estos son los valores corregidos con datos reales de Brain (1 jun 2026):
+Versiones anteriores de este reto contienen datos incorrectos. Estos son los valores actualizados con datos reales de Brain (1 jun 2026):
 
 | Métrica | Valor anterior | **Valor correcto** | Fuente |
 |---|---|---|---|
@@ -135,4 +136,4 @@ BRAIN (BigQuery + Zendesk + VoC) — fuente primaria
 
 ---
 
-*Repositorio generado el 1 jun 2026 · Jose Ramón Coto Gallego · jcoto@civitatis.com*
+*1 jun 2026 · Jota Coto · jcoto@civitatis.com*
