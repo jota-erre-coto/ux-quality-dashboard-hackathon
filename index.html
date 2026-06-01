@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UX Quality Dashboard · Civitatis Hackathon 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #EA0558; --primary-light: #FFE4EF;
+    --foreground: #0F0F1E; --foreground-light: #4A4A6A; --foreground-lighter: #8888A8;
+    --background: #FFFFFF; --surface: #F8F8FC; --border: #E8E8F0;
+    --success: #16A34A; --success-light: #DCFCE7;
+    --font: 'Montserrat', system-ui, sans-serif;
+    --radius-xl: 18px; --radius-pill: 999px;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--background); color: var(--foreground); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #0f0f1e 0%, #1a0a2e 50%, #2a0a1e 100%);
+    padding: 64px 40px 52px; text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before { content: ''; position: absolute; top: -100px; right: -80px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(234,5,88,.2) 0%, transparent 70%); pointer-events: none; }
+  .hero::after  { content: ''; position: absolute; bottom: -80px; left: -60px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(120,40,200,.12) 0%, transparent 70%); pointer-events: none; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(234,5,88,.18); border: 1px solid rgba(234,5,88,.35); color: #FF80B0; font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; padding: 5px 12px; border-radius: var(--radius-pill); margin-bottom: 20px; }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #FF80B0; }
+  .hero h1 { font-size: 38px; font-weight: 700; color: #fff; letter-spacing: -.4px; margin-bottom: 12px; }
+  .hero h1 span { color: #FF80B0; }
+  .hero p { font-size: 16px; color: rgba(255,255,255,.65); max-width: 560px; margin: 0 auto 32px; line-height: 1.65; }
+  .hero-meta { font-size: 12px; color: rgba(255,255,255,.35); }
+  .hero-meta strong { color: rgba(255,255,255,.55); font-weight: 600; }
+
+  /* MAIN */
+  .main { max-width: 960px; margin: 0 auto; padding: 52px 32px; }
+
+  /* SECTION */
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; }
+  .section-title { font-size: 22px; font-weight: 700; color: var(--foreground); margin-bottom: 6px; }
+  .section-desc { font-size: 15px; color: var(--foreground-light); line-height: 1.65; margin-bottom: 28px; }
+
+  /* CARDS */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 48px; }
+  .card {
+    background: var(--background); border: 1px solid var(--border);
+    border-radius: var(--radius-xl); padding: 28px; box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 12px;
+    transition: box-shadow .15s, transform .15s; text-decoration: none;
+    border-top: 3px solid var(--border);
+  }
+  .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .card.primary { border-top-color: var(--primary); }
+  .card.success { border-top-color: var(--success); }
+  .card-icon { font-size: 28px; }
+  .card-title { font-size: 17px; font-weight: 700; color: var(--foreground); }
+  .card-desc { font-size: 14px; color: var(--foreground-light); line-height: 1.55; flex: 1; }
+  .card-cta {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 700; color: var(--primary);
+    padding: 8px 16px; border-radius: var(--radius-pill);
+    background: var(--primary-light); align-self: flex-start;
+    transition: opacity .15s;
+  }
+  .card:hover .card-cta { opacity: .85; }
+  .card.success .card-cta { color: var(--success); background: var(--success-light); }
+
+  /* DOCS GRID */
+  .docs { display: flex; flex-direction: column; gap: 10px; margin-bottom: 48px; }
+  .doc-row {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px;
+    display: flex; align-items: flex-start; gap: 14px;
+    text-decoration: none; transition: background .12s;
+  }
+  .doc-row:hover { background: var(--primary-light); border-color: rgba(234,5,88,.2); }
+  .doc-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .doc-name { font-size: 14px; font-weight: 700; color: var(--foreground); margin-bottom: 3px; }
+  .doc-desc { font-size: 13px; color: var(--foreground-light); line-height: 1.45; }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 48px; }
+  .step { display: flex; gap: 16px; align-items: flex-start; padding: 16px 20px; background: var(--surface); border-radius: 12px; border: 1px solid var(--border); }
+  .step-num { font-size: 18px; font-weight: 800; color: var(--primary); line-height: 1; min-width: 24px; }
+  .step-text { font-size: 14px; color: var(--foreground-light); line-height: 1.55; }
+  .step-text strong { color: var(--foreground); font-weight: 700; }
+
+  /* FOOTER */
+  footer { background: var(--foreground); text-align: center; padding: 24px; }
+  footer p { font-size: 12px; color: rgba(255,255,255,.35); }
+  footer strong { color: rgba(255,255,255,.55); font-weight: 600; }
+
+  @media (max-width: 680px) {
+    .cards { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 26px; }
+    .main { padding: 36px 20px; }
+    .hero { padding: 48px 20px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-badge">Hackathon Civitatis · 2–3 jun 2026 · Pilar 1</div>
+  <h1>UX Quality Dashboard<br><span>la lente UX sobre Brain</span></h1>
+  <p>Civitatis mide el negocio con excelencia. Este reto añade la capa de calidad UX que conecta cada decisión de diseño con su impacto medido.</p>
+  <div class="hero-meta"><strong>Jose Ramón Coto Gallego</strong> · Head of UX, Civitatis</div>
+</header>
+
+<main class="main">
+
+  <!-- HERRAMIENTAS INTERACTIVAS -->
+  <p class="section-label">Herramientas para el hackathon</p>
+  <h2 class="section-title">Abre esto en el navegador</h2>
+  <p class="section-desc">Las dos herramientas interactivas que el equipo usará durante las 48 horas del hackathon.</p>
+
+  <div class="cards">
+    <a class="card primary" href="hackathon-proposal.html">
+      <div class="card-icon">📋</div>
+      <div class="card-title">Propuesta del reto</div>
+      <div class="card-desc">Propuesta visual completa con el problema (datos reales de Brain), la solución (2 vistas + MCP), el plan de las 48h y el equipo. Para presentar al jurado.</div>
+      <span class="card-cta">Ver propuesta →</span>
+    </a>
+    <a class="card success" href="brain-data-map-viewer.html">
+      <div class="card-icon">🧠</div>
+      <div class="card-title">Brain Data Map</div>
+      <div class="card-desc">97 KPIs mapeados — dónde está cada dato en Brain, quién lo tiene y cómo extraerlo. Filtrable por segmento, dimensión y estado del conector (live / sin instrumentar).</div>
+      <span class="card-cta">Ver mapa de datos →</span>
+    </a>
+  </div>
+
+  <!-- DOCUMENTACIÓN -->
+  <p class="section-label">Documentación</p>
+  <h2 class="section-title">Archivos de referencia</h2>
+  <p class="section-desc">Leer en este orden si es la primera vez que te incorporas al reto.</p>
+
+  <div class="docs">
+    <a class="doc-row" href="ux-quality-dashboard-prd-v2.md">
+      <span class="doc-icon">📄</span>
+      <div>
+        <div class="doc-name">PRD v2.1 — ux-quality-dashboard-prd-v2.md</div>
+        <div class="doc-desc">Documento de producto completo: problema, solución, KPIs por dimensión (con datos Brain reales), modelo de datos TypeScript, requisitos y alcance MVP. <strong>Empieza aquí.</strong></div>
+      </div>
+    </a>
+    <a class="doc-row" href="ux-quality-dashboard-model-v2.md">
+      <span class="doc-icon">📐</span>
+      <div>
+        <div class="doc-name">Modelo de medición — ux-quality-dashboard-model-v2.md</div>
+        <div class="doc-desc">Decisiones del grill-me: clasificador de 3 etiquetas, cómputo del Health Index, tablas de KPIs con conectores brain:*, JSON de contrato y plan 48h detallado.</div>
+      </div>
+    </a>
+    <a class="doc-row" href="brain-data-map.md">
+      <span class="doc-icon">🗺️</span>
+      <div>
+        <div class="doc-name">Brain Data Map — brain-data-map.md</div>
+        <div class="doc-desc">Versión markdown del mapa de datos. OKRs AT RISK, alertas activas, taxonomía VoC y las 5 preguntas para la hora 0. Úsalo junto al viewer interactivo.</div>
+      </div>
+    </a>
+    <a class="doc-row" href="ux-quality-dashboard-knowledge-export-v2.md">
+      <span class="doc-icon">📚</span>
+      <div>
+        <div class="doc-name">Knowledge Export v2.1 — ux-quality-dashboard-knowledge-export-v2.md</div>
+        <div class="doc-desc">Todo el conocimiento generado en el discovery (1 jun 2026): exploración completa de Brain, 12 decisiones cerradas, datos corregidos vs versiones anteriores, evidencias de Confluence.</div>
+      </div>
+    </a>
+    <a class="doc-row" href="hackathon-brain-panel.md">
+      <span class="doc-icon">🔗</span>
+      <div>
+        <div class="doc-name">Brain Panel — hackathon-brain-panel.md</div>
+        <div class="doc-desc">Texto de la propuesta en el formato del panel de retos de Brain. Mismo esquema que el resto de retos del hackathon.</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- GUÍA RÁPIDA -->
+  <p class="section-label">Guía rápida</p>
+  <h2 class="section-title">Cómo arrancar el día 1</h2>
+  <p class="section-desc">Cinco pasos para la primera hora del hackathon.</p>
+
+  <div class="steps">
+    <div class="step"><span class="step-num">1</span><div class="step-text">Abrir el <strong>Brain Data Map Viewer</strong> (arriba) en el navegador — es la referencia de datos durante las 48h.</div></div>
+    <div class="step"><span class="step-num">2</span><div class="step-text">Acordar con el equipo el <strong>JSON de contrato</strong> (ver modelo-v2 §6) en los primeros 30 minutos. Es el desacoplador entre Pista Data y Pista Producto.</div></div>
+    <div class="step"><span class="step-num">3</span><div class="step-text"><strong>Pista Data:</strong> confirmar si Brain expone API REST o hay que ir a BigQuery directamente · configurar Strategic Themes del VoC en Brain (10 min, Domingo Martín) · conectar Play Console API.</div></div>
+    <div class="step"><span class="step-num">4</span><div class="step-text"><strong>Pista Producto:</strong> dashboard data-driven con datos reales de Brain precargados (CR 4,12% · AOV €135 · NPS 9,3 · CSAT 94% · Perfect Memories 70,7%). Demo-able al final del día 1.</div></div>
+    <div class="step"><span class="step-num">5</span><div class="step-text"><strong>Día 2 · narrativa de demo:</strong> preguntar a Claude "¿por qué cayó el AOV en mayo?" → el asistente cruza Salud UX + Gate 3 y responde con una hipótesis estructurada en vivo.</div></div>
+  </div>
+
+</main>
+
+<footer>
+  <p><strong>UX Quality Dashboard · Hackathon Civitatis 2026</strong> &nbsp;·&nbsp; Jose Ramón Coto Gallego · jcoto@civitatis.com</p>
+</footer>
+
+</body>
+</html>

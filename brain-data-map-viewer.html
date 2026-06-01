@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain Data Map · Hackathon Civitatis 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ODISEA ──────────────────────────────────────────────── */
+:root {
+  --font: 'Montserrat', 'Inter', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --primary:          #EA0558;
+  --primary-hover:    #C8044B;
+  --primary-light:    #FFE4EF;
+  --foreground:       #0F0F1E;
+  --foreground-light: #4A4A6A;
+  --foreground-lighter:#8888A8;
+  --background:       #FFFFFF;
+  --surface:          #F8F8FC;
+  --surface-muted:    #F3F3F9;
+  --border:           #E8E8F0;
+  --line:             #E2E2EC;
+  --card:             #FFFFFF;
+  --success:          #16A34A;  --success-light: #DCFCE7;
+  --error:            #DC2626;  --error-light:   #FEE2E2;
+  --warning:          #D97706;  --warning-light: #FEF3C7;
+  --info:             #2563EB;  --info-light:    #DBEAFE;
+  --elevation-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --elevation-md: 0 4px 12px rgba(0,0,0,.08);
+  --radius-sm:   6px; --radius-md:  10px; --radius-lg: 14px;
+  --radius-xl:  18px; --radius-pill: 999px;
+  --space-xs:  4px; --space-sm: 8px; --space-md: 16px; --space-lg: 24px;
+  --space-xl: 32px; --space-2xl: 48px; --space-3xl: 64px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--background); color: var(--foreground); -webkit-font-smoothing: antialiased; line-height: 1.6; }
+::selection { background: var(--primary-light); color: var(--foreground); }
+
+/* ─── LAYOUT ─────────────────────────────────────────────────────── */
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+section { padding: 56px 0; }
+section.alt { background: var(--surface); }
+
+/* ─── HERO VARIANTE A (Operativo) ────────────────────────────────── */
+.hero {
+  background: var(--background);
+  border-bottom: 1px solid var(--line);
+  padding: 52px 0 40px;
+}
+.hero .wrap { display: flex; flex-direction: column; gap: 6px; }
+.hero-overline {
+  font-size: 11px; font-weight: 700; letter-spacing: .7px;
+  text-transform: uppercase; color: var(--primary);
+}
+.hero h1 {
+  font-size: 40px; font-weight: 700; line-height: 1.15;
+  color: var(--foreground); letter-spacing: -.4px;
+  border-left: 3px solid var(--primary); padding-left: 20px;
+  margin-left: -23px; max-width: 760px;
+}
+.hero-sub {
+  font-size: 17px; color: var(--foreground-light); line-height: 1.65;
+  max-width: 640px; margin-top: 4px;
+}
+.hero-stats {
+  display: flex; gap: 32px; margin-top: 28px; flex-wrap: wrap;
+}
+.hero-stat { display: flex; flex-direction: column; gap: 2px; }
+.hero-stat-val { font-size: 28px; font-weight: 700; color: var(--foreground); font-variant-numeric: tabular-nums; line-height: 1; }
+.hero-stat-val.ok { color: var(--success); }
+.hero-stat-val.gap { color: var(--error); }
+.hero-stat-lbl { font-size: 11px; color: var(--foreground-lighter); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+.hero-stat-sep { width: 1px; background: var(--border); align-self: stretch; }
+
+/* ─── FILTER BAR ─────────────────────────────────────────────────── */
+.filter-bar {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+}
+.filter-inner { display: flex; flex-direction: column; gap: 8px; }
+.filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.filter-label { font-size: 11px; font-weight: 700; color: var(--foreground-lighter); text-transform: uppercase; letter-spacing: .5px; white-space: nowrap; min-width: 76px; }
+.chip {
+  font-size: 12px; font-weight: 600; padding: 5px 12px;
+  border-radius: var(--radius-pill); border: 1px solid var(--border);
+  background: var(--card); color: var(--foreground-light);
+  cursor: pointer; transition: all .15s ease; user-select: none;
+}
+.chip:hover { border-color: var(--primary-light); color: var(--primary); }
+.chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.chip.dim-chip.active { background: var(--foreground); border-color: var(--foreground); color: #fff; }
+.search-wrap { position: relative; flex: 1; max-width: 280px; margin-left: auto; }
+.search-wrap input {
+  width: 100%; padding: 7px 12px 7px 32px;
+  border: 1px solid var(--border); border-radius: var(--radius-pill);
+  font-family: var(--font); font-size: 13px; color: var(--foreground);
+  background: var(--surface-muted);
+  transition: border-color .15s;
+}
+.search-wrap input:focus { outline: none; border-color: var(--primary); background: var(--card); }
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--foreground-lighter); font-size: 13px; pointer-events: none; }
+.filter-count { font-size: 12px; color: var(--foreground-lighter); white-space: nowrap; align-self: center; }
+
+/* ─── SECTION HEADER ─────────────────────────────────────────────── */
+.sec-head { margin-bottom: 28px; }
+.sec-num { font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--primary); display: block; margin-bottom: 6px; }
+.sec-head h2 { font-size: 26px; font-weight: 700; color: var(--foreground); }
+.sec-head p { font-size: 15px; color: var(--foreground-light); margin-top: 6px; }
+
+/* ─── DATA TABLE ─────────────────────────────────────────────────── */
+.table-wrap { border: 1px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--elevation-sm); }
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table thead th {
+  background: var(--foreground); color: rgba(255,255,255,.70);
+  font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  padding: 10px 14px; text-align: left; white-space: nowrap;
+}
+.data-table tbody tr { border-bottom: 1px solid var(--line); transition: background .1s; }
+.data-table tbody tr:last-child { border-bottom: none; }
+.data-table tbody tr:hover { background: var(--surface); }
+.data-table tbody tr.hidden { display: none; }
+.data-table td { padding: 11px 14px; vertical-align: top; line-height: 1.45; }
+.td-name { font-weight: 600; color: var(--foreground); min-width: 200px; }
+.td-name small { display: block; font-weight: 400; color: var(--foreground-lighter); font-size: 11px; margin-top: 2px; }
+.td-val { font-family: var(--mono); font-size: 12px; color: var(--foreground); min-width: 120px; }
+.td-val.alert { color: var(--error); font-weight: 600; }
+.td-val.ok { color: var(--success); font-weight: 600; }
+.td-where { color: var(--foreground-light); font-size: 12px; min-width: 180px; max-width: 240px; }
+.td-owner { color: var(--foreground-lighter); font-size: 12px; white-space: nowrap; }
+.seg-badge {
+  display: inline-block; font-size: 9px; font-weight: 700;
+  padding: 2px 6px; border-radius: var(--radius-pill); margin-bottom: 3px;
+}
+.sb-web { background: #EDE9FE; color: #6D28D9; }
+.sb-app { background: var(--info-light); color: var(--info); }
+.sb-b2b { background: #FEF3C7; color: #B45309; }
+.dim-badge {
+  font-size: 10px; font-weight: 600; color: var(--foreground-lighter);
+  margin-right: 4px;
+}
+
+/* ─── CONNECTOR BADGE ────────────────────────────────────────────── */
+.conn {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 700; padding: 3px 8px;
+  border-radius: var(--radius-pill); white-space: nowrap;
+}
+.conn-live  { background: var(--success-light); color: var(--success); }
+.conn-api   { background: var(--info-light);    color: var(--info); }
+.conn-none  { background: var(--error-light);   color: var(--error); }
+.conn-pending { background: var(--warning-light); color: var(--warning); }
+.conn::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+/* ─── ALERT / OKR GRID ───────────────────────────────────────────── */
+.alert-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+.alert-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); padding: 16px 18px;
+  box-shadow: var(--elevation-sm);
+  border-left: 3px solid var(--error);
+}
+.alert-card.warn { border-left-color: var(--warning); }
+.alert-card.ok   { border-left-color: var(--success); }
+.alert-val { font-size: 24px; font-weight: 700; color: var(--error); font-variant-numeric: tabular-nums; }
+.alert-card.warn .alert-val { color: var(--warning); }
+.alert-card.ok   .alert-val { color: var(--success); }
+.alert-name { font-size: 13px; font-weight: 700; color: var(--foreground); margin-top: 3px; }
+.alert-detail { font-size: 12px; color: var(--foreground-lighter); margin-top: 4px; line-height: 1.4; }
+
+/* ─── VOC TABLE ──────────────────────────────────────────────────── */
+.voc-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--elevation-sm); }
+.voc-table th { background: var(--surface-muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; color: var(--foreground-lighter); padding: 9px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+.voc-table td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid var(--line); color: var(--foreground-light); }
+.voc-table tr:last-child td { border-bottom: none; }
+.voc-table tr:nth-child(even) td { background: var(--surface); }
+.voc-tag { font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--primary); }
+
+/* ─── CALLOUT ────────────────────────────────────────────────────── */
+.callout {
+  border-left: 3px solid var(--primary); background: var(--primary-light);
+  padding: 16px 20px; border-radius: 0 var(--radius-md) var(--radius-md) 0; margin-bottom: 24px;
+}
+.callout.warn { border-left-color: var(--warning); background: var(--warning-light); }
+.callout-label { font-size: 10px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; color: var(--primary); margin-bottom: 4px; }
+.callout.warn .callout-label { color: var(--warning); }
+.callout p { font-size: 14px; color: var(--foreground-light); line-height: 1.6; }
+
+/* ─── QUESTIONS ──────────────────────────────────────────────────── */
+.q-list { display: flex; flex-direction: column; gap: 10px; }
+.q-item {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 14px 18px; box-shadow: var(--elevation-sm); display: flex; gap: 14px; align-items: flex-start;
+}
+.q-num { font-size: 13px; font-weight: 700; color: var(--primary); white-space: nowrap; min-width: 20px; }
+.q-text { font-size: 14px; color: var(--foreground-light); line-height: 1.5; }
+.q-owner { font-size: 11px; color: var(--foreground-lighter); margin-top: 4px; font-weight: 600; }
+
+/* ─── FOOTER LIGHT ───────────────────────────────────────────────── */
+footer {
+  background: var(--background);
+  border-top: 1px solid var(--line);
+  padding: 20px 40px;
+}
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.footer-logo { display: flex; align-items: center; gap: 8px; }
+.footer-logo svg { height: 18px; fill: var(--primary); }
+.footer-text { font-size: 12px; color: var(--foreground-lighter); text-align: right; }
+.footer-text strong { color: var(--foreground-light); font-weight: 600; }
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────── */
+@media (max-width: 980px) {
+  .alert-grid { grid-template-columns: 1fr 1fr; }
+  .data-table { display: block; overflow-x: auto; }
+}
+@media (max-width: 768px) {
+  .wrap, footer { padding-left: 20px; padding-right: 20px; }
+  section { padding: 40px 0; }
+  .hero h1 { font-size: 28px; }
+  .alert-grid { grid-template-columns: 1fr; }
+  .filter-row { gap: 6px; }
+  .search-wrap { max-width: 100%; margin-left: 0; }
+}
+@media print { .filter-bar { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ HERO ═══════════ -->
+<header class="hero">
+  <div class="wrap">
+    <span class="hero-overline">Hackathon Civitatis 2026 · Referencia operativa del equipo</span>
+    <h1>Brain Data Map</h1>
+    <p class="hero-sub">Dónde encontrar cada dato, quién lo tiene y cómo extraerlo. Filtra por segmento, dimensión o estado del conector para localizar rápidamente lo que necesitas durante el hackathon.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-val">97</span><span class="hero-stat-lbl">KPIs mapeados</span></div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat"><span class="hero-stat-val ok">51</span><span class="hero-stat-lbl">Live (brain:* / api:*)</span></div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat"><span class="hero-stat-val gap">46</span><span class="hero-stat-lbl">Sin instrumentar</span></div>
+      <div class="hero-stat-sep"></div>
+      <div class="hero-stat"><span class="hero-stat-val">3</span><span class="hero-stat-lbl">Segmentos</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ FILTER BAR ═══════════ -->
+<div class="filter-bar">
+  <div class="wrap">
+    <div class="filter-inner">
+      <div class="filter-row">
+        <span class="filter-label">Segmento</span>
+        <span class="chip active" data-filter="seg" data-val="all">Todos</span>
+        <span class="chip" data-filter="seg" data-val="web">🖥️ B2C Web</span>
+        <span class="chip" data-filter="seg" data-val="app">📱 B2C App</span>
+        <span class="chip" data-filter="seg" data-val="b2b">🏢 B2B</span>
+        <div class="search-wrap">
+          <span class="search-icon">⌕</span>
+          <input type="text" id="search-input" placeholder="Buscar dato, responsable..." autocomplete="off">
+        </div>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Dimensión</span>
+        <span class="chip dim-chip active" data-filter="dim" data-val="all">Todas</span>
+        <span class="chip dim-chip" data-filter="dim" data-val="useful">🎯 Útil</span>
+        <span class="chip dim-chip" data-filter="dim" data-val="usable">🖱️ Usable</span>
+        <span class="chip dim-chip" data-filter="dim" data-val="findable">🔍 Findable</span>
+        <span class="chip dim-chip" data-filter="dim" data-val="desirable">💜 Desirable</span>
+        <span class="chip dim-chip" data-filter="dim" data-val="credible">🛡️ Credible</span>
+        <span class="chip dim-chip" data-filter="dim" data-val="accessible">♿ Accessible</span>
+        <span class="chip dim-chip" data-filter="dim" data-val="valuable">💰 Valuable</span>
+        <span class="filter-count" id="count-label">97 resultados</span>
+      </div>
+      <div class="filter-row">
+        <span class="filter-label">Conector</span>
+        <span class="chip active" data-filter="conn" data-val="all">Todos</span>
+        <span class="chip" data-filter="conn" data-val="live">🟢 Live</span>
+        <span class="chip" data-filter="conn" data-val="none">🔴 Sin instrumentar</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ TABLA DE DATOS ═══════════ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">01 · Mapa completo de datos</span>
+      <h2>Todos los KPIs por segmento y dimensión</h2>
+      <p>Fuente: exploración directa de brain.civitatis.tech · 1 jun 2026. Valores de mayo de 2026 salvo indicación.</p>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table" id="main-table">
+        <thead>
+          <tr>
+            <th>Dato / Dimensión</th>
+            <th>Valor Mayo 2026</th>
+            <th>Dónde en Brain</th>
+            <th>Responsable</th>
+            <th>Conector</th>
+          </tr>
+        </thead>
+        <tbody>
+
+<!-- ── B2C WEB ── -->
+<!-- Useful -->
+<tr data-seg="web" data-dim="useful" data-conn="live" data-search="NR alternativas sin disponibilidad Andres Spitzer WAVE Brain Pilar 1">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🎯</span>NR alternativas sin disponibilidad</td>
+  <td class="td-val ok">+190% YoY</td>
+  <td class="td-where">Analytics → Dashboard Pilar 1</td>
+  <td class="td-owner">Andres Spitzer (WAVE)</td>
+  <td><span class="conn conn-live">brain:pillar/1</span></td>
+</tr>
+<tr data-seg="web" data-dim="useful" data-conn="live" data-search="Perfect Memories rate 5 estrellas total reviews Arturo Moreno Supply">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🎯</span>Perfect Memories rate (5★/total)<small>L12M: 60,5% · 830K reviews · 3,14M PMs 2026</small></td>
+  <td class="td-val ok">70,7% global</td>
+  <td class="td-where">Analytics → Executive → Perfect Memories</td>
+  <td class="td-owner">Arturo Moreno (Supply)</td>
+  <td><span class="conn conn-live">brain:executive/perfect-memories</span></td>
+</tr>
+<tr data-seg="web" data-dim="useful" data-conn="none" data-search="zero results rate buscador web GA4 sin instrumentar">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🎯</span>Zero-results rate buscador web</td>
+  <td class="td-val alert">No existe</td>
+  <td class="td-where">— (GA4 search_no_results)</td>
+  <td class="td-owner">—</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<!-- Usable -->
+<tr data-seg="web" data-dim="usable" data-conn="live" data-search="CR web conversión rate Javi García 4.12%">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🖱️</span>CR web<small>Target OKR: 4,3% — 73% progreso</small></td>
+  <td class="td-val">4,12% (−0,9%)</td>
+  <td class="td-where">Dashboard → Pilar 1</td>
+  <td class="td-owner">Javi García (CI-1634)</td>
+  <td><span class="conn conn-live">brain:pillar/1</span></td>
+</tr>
+<tr data-seg="web" data-dim="usable" data-conn="live" data-search="sesiones con compra 81492 Javi García">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🖱️</span>Sesiones con compra</td>
+  <td class="td-val">81.492 (−6,4%)</td>
+  <td class="td-where">Dashboard → Pilar 1</td>
+  <td class="td-owner">Javi García</td>
+  <td><span class="conn conn-live">brain:pillar/1</span></td>
+</tr>
+<tr data-seg="web" data-dim="usable" data-conn="none" data-search="abandono checkout por paso funnel mock Solvey Prada FLOW">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🖱️</span>Abandono checkout por paso<small>⚠️ Funnel Brain en Mock Data — no live</small></td>
+  <td class="td-val">77,19% (global)</td>
+  <td class="td-where">Executive → Funnels (Design Mode)</td>
+  <td class="td-owner">Solvey Prada (FLOW)</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<tr data-seg="web" data-dim="usable" data-conn="live" data-search="ratio PLP PDP 57% OKR CI-2112">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🖱️</span>Ratio PLP→PDP</td>
+  <td class="td-val">57%</td>
+  <td class="td-where">OKR Canvas / Pilar 1</td>
+  <td class="td-owner">Solvey Prada</td>
+  <td><span class="conn conn-live">brain:pillar/1</span></td>
+</tr>
+<tr data-seg="web" data-dim="usable" data-conn="live" data-search="CES Customer Effort Score 9.7 global Domingo Martín">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🖱️</span>CES global</td>
+  <td class="td-val">9,7</td>
+  <td class="td-where">Dashboard ejecutivo + Pilar 1</td>
+  <td class="td-owner">Domingo Martín / Javi García</td>
+  <td><span class="conn conn-live">brain:analytics</span></td>
+</tr>
+<tr data-seg="web" data-dim="usable" data-conn="none" data-search="tasa error formularios form_error GA4 sin instrumentar">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🖱️</span>Tasa de error en formularios</td>
+  <td class="td-val alert">No existe</td>
+  <td class="td-where">— (GA4 form_error)</td>
+  <td class="td-owner">—</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<!-- Findable -->
+<tr data-seg="web" data-dim="findable" data-conn="live" data-search="posición media CAT Landings 5.1 Hector Castillo WAVE SEO">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🔍</span>Posición media CAT Landings<small>Era 17,8</small></td>
+  <td class="td-val ok">5,1</td>
+  <td class="td-where">OKR Canvas / Pilar 1</td>
+  <td class="td-owner">Hector Castillo (WAVE/SEO)</td>
+  <td><span class="conn conn-live">brain:pillar/1</span></td>
+</tr>
+<tr data-seg="web" data-dim="findable" data-conn="live" data-search="sesiones orgánicas 561940 Hector Castillo">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🔍</span>Sesiones orgánicas web</td>
+  <td class="td-val">561.940 (−1% vs LY)</td>
+  <td class="td-where">Dashboard → Pilar 1</td>
+  <td class="td-owner">Hector Castillo</td>
+  <td><span class="conn conn-live">brain:pillar/1</span></td>
+</tr>
+<tr data-seg="web" data-dim="findable" data-conn="pending" data-search="Typesense buscador CIVI-3262 21 mayo sin métricas Gate 3">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🔍</span>Buscador Typesense (CIVI-3262)<small>⚠️ Lanzado 21 may — sin métricas de impacto. Candidato Gate 3 urgente.</small></td>
+  <td class="td-val alert">Sin métricas</td>
+  <td class="td-where">WBR → Deliveries (OTROS)</td>
+  <td class="td-owner">Hector Castillo</td>
+  <td><span class="conn conn-pending">Gate 3 pendiente</span></td>
+</tr>
+<tr data-seg="web" data-dim="findable" data-conn="live" data-search="CTR upsellings 4.4% Optimizely Javi García A/B">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🔍</span>CTR upsellings<small>Solo durante A/B tests activos</small></td>
+  <td class="td-val">4,4%</td>
+  <td class="td-where">Optimizely</td>
+  <td class="td-owner">Javi García</td>
+  <td><span class="conn conn-api">api:optimizely</span></td>
+</tr>
+<tr data-seg="web" data-dim="findable" data-conn="none" data-search="CTR buscador interno search_result_clicked GA4">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🔍</span>CTR buscador interno</td>
+  <td class="td-val alert">No existe</td>
+  <td class="td-where">— (GA4 search_result_clicked)</td>
+  <td class="td-owner">—</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<!-- Desirable -->
+<tr data-seg="web" data-dim="desirable" data-conn="live" data-search="NPS B2C 9.3 OKR 0% Javi García CI-1634">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">💜</span>NPS B2C<small>⚠️ Target >9,4 = 0% OKR</small></td>
+  <td class="td-val alert">9,3</td>
+  <td class="td-where">Dashboard Pilar 1 + OKR CI-1634</td>
+  <td class="td-owner">Javi García</td>
+  <td><span class="conn conn-live">brain:pillar/1</span></td>
+</tr>
+<tr data-seg="web" data-dim="desirable" data-conn="live" data-search="CSAT B2C 94% Zendesk Domingo Martín CS Stats">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">💜</span>CSAT B2C (Zendesk)<small>Valor corregido: 94%, no 87,7%</small></td>
+  <td class="td-val ok">94% (+0,3pp)</td>
+  <td class="td-where">Contacts → Customer Service Stats → Mayo</td>
+  <td class="td-owner">Domingo Martín</td>
+  <td><span class="conn conn-live">brain:cs-stats</span></td>
+</tr>
+<tr data-seg="web" data-dim="desirable" data-conn="live" data-search="VoC temas negativos recurrentes 50 tags Zendesk sentimiento">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">💜</span>Temas VoC negativos (Zendesk)<small>⚠️ Requiere configurar Strategic Themes (10 min)</small></td>
+  <td class="td-val">50 tags disponibles</td>
+  <td class="td-where">Contacts → VoC → Configure</td>
+  <td class="td-owner">Domingo Martín</td>
+  <td><span class="conn conn-live">brain:voc</span></td>
+</tr>
+<tr data-seg="web" data-dim="desirable" data-conn="live" data-search="usuarios recurrentes 31254 semana Javi García">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">💜</span>Usuarios recurrentes (semana)</td>
+  <td class="td-val">31.254</td>
+  <td class="td-where">Dashboard → Pilar 1</td>
+  <td class="td-owner">Javi García / Laura Llamas</td>
+  <td><span class="conn conn-live">brain:pillar/1</span></td>
+</tr>
+<!-- Credible -->
+<tr data-seg="web" data-dim="credible" data-conn="live" data-search="CSAT B2C 94 Zendesk tickets volumen 6360">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🛡️</span>Volumen tickets B2C</td>
+  <td class="td-val">6.360 (Mayo)</td>
+  <td class="td-where">Contacts → CS Stats</td>
+  <td class="td-owner">Domingo Martín</td>
+  <td><span class="conn conn-live">brain:cs-stats</span></td>
+</tr>
+<tr data-seg="web" data-dim="credible" data-conn="live" data-search="auth rate LATAM 82% target 85% BigQuery">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🛡️</span>Auth Rate LATAM<small>Target: 85%</small></td>
+  <td class="td-val">82%</td>
+  <td class="td-where">OKR / Brain Pillar 1</td>
+  <td class="td-owner">Hector Castillo (Payments)</td>
+  <td><span class="conn conn-live">brain:pillar/1</span></td>
+</tr>
+<tr data-seg="web" data-dim="credible" data-conn="live" data-search="VoC problemas pago informacion erronea web tag Zendesk">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🛡️</span>VoC #problemas_para_el_pago + #informacion_erronea_en_web</td>
+  <td class="td-val">activo (tag Zendesk)</td>
+  <td class="td-where">Contacts → VoC → Configure</td>
+  <td class="td-owner">Domingo Martín</td>
+  <td><span class="conn conn-live">brain:voc</span></td>
+</tr>
+<tr data-seg="web" data-dim="credible" data-conn="none" data-search="PIX Brasil Mercado Pago Mexico atascado CIVI-2092 CIVI-2089 Hector Castillo">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🛡️</span>PIX Brasil + Mercado Pago MX<small>⚠️ CIVI-2092/2089 bloqueados — riesgo Credible LATAM activo</small></td>
+  <td class="td-val alert">Atascado</td>
+  <td class="td-where">WBR → Payments & Billing</td>
+  <td class="td-owner">Hector Castillo</td>
+  <td><span class="conn conn-none">incidencia activa</span></td>
+</tr>
+<tr data-seg="web" data-dim="credible" data-conn="none" data-search="abandono en pago motivo GA4 survey salida">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">🛡️</span>Abandono en pago + motivo</td>
+  <td class="td-val alert">No existe</td>
+  <td class="td-where">— (GA4 + survey)</td>
+  <td class="td-owner">—</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<!-- Accessible -->
+<tr data-seg="web" data-dim="accessible" data-conn="live" data-search="VoC accesibilidad idioma tag Zendesk">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">♿</span>VoC #accesibilidad + #idioma<small>⚠️ Requiere configurar Strategic Themes</small></td>
+  <td class="td-val">activo (tag Zendesk)</td>
+  <td class="td-where">Contacts → VoC → Configure</td>
+  <td class="td-owner">Domingo Martín</td>
+  <td><span class="conn conn-live">brain:voc</span></td>
+</tr>
+<tr data-seg="web" data-dim="accessible" data-conn="none" data-search="Lighthouse a11y score axe-core ARIA alt Juan Cobo Design Ops EAA">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">♿</span>Lighthouse a11y + axe-core<small>Hito #11 Design Ops vacío · requisito legal EAA</small></td>
+  <td class="td-val alert">No existe</td>
+  <td class="td-where">— (Lighthouse CI / axe-core)</td>
+  <td class="td-owner">Juan Cobo (Design Ops)</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<!-- Valuable -->
+<tr data-seg="web" data-dim="valuable" data-conn="live" data-search="NR web mayo 5.61M Arturo Moreno Product Surface">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">💰</span>NR Web Mayo</td>
+  <td class="td-val">€5,61M (−5,4% vs LY)</td>
+  <td class="td-where">Product Surface → Website</td>
+  <td class="td-owner">Arturo Moreno</td>
+  <td><span class="conn conn-live">brain:product-surface/website</span></td>
+</tr>
+<tr data-seg="web" data-dim="valuable" data-conn="live" data-search="AOV 135 euros target 142 0% OKR Javi García">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">💰</span>AOV B2C<small>⚠️ Target €142 = 0% OKR</small></td>
+  <td class="td-val alert">€135 (+4,8%)</td>
+  <td class="td-where">Dashboard Pilar 1 (semanal)</td>
+  <td class="td-owner">Javi García</td>
+  <td><span class="conn conn-live">brain:pillar/1</span></td>
+</tr>
+<tr data-seg="web" data-dim="valuable" data-conn="live" data-search="LTV 12 meses 30.2 target 32.5 Laura Llamas CI-1849">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">💰</span>LTV 12 meses<small>Target €32,5 = 25% OKR</small></td>
+  <td class="td-val">€30,2</td>
+  <td class="td-where">OKR CI-1849</td>
+  <td class="td-owner">Laura Llamas</td>
+  <td><span class="conn conn-live">brain:impact</span></td>
+</tr>
+<tr data-seg="web" data-dim="valuable" data-conn="none" data-search="feature adoption rate GA4 uso feature 4 semanas">
+  <td class="td-name"><span class="seg-badge sb-web">B2C Web</span><span class="dim-badge">💰</span>Feature Adoption Rate</td>
+  <td class="td-val alert">No existe</td>
+  <td class="td-where">— (GA4 % uso feature en 4 sem)</td>
+  <td class="td-owner">—</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+
+<!-- ── B2C APP ── -->
+<!-- Useful -->
+<tr data-seg="app" data-dim="useful" data-conn="live" data-search="installs iOS Android 34946 98265 Laura Sánchez-Crespo Apps Squad Brain Product Surface">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🎯</span>Installs iOS / Android<small>iOS ↓20,1% · Android ↓7,9% vs 2025</small></td>
+  <td class="td-val">34.946 / 98.265</td>
+  <td class="td-where">Product Surface → App → Installs & Devices</td>
+  <td class="td-owner">Laura Sánchez-Crespo (Apps)</td>
+  <td><span class="conn conn-live">brain:product-surface/app</span></td>
+</tr>
+<tr data-seg="app" data-dim="useful" data-conn="live" data-search="active users Android 856026 iOS 110649 Laura Sánchez-Crespo">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🎯</span>Active users iOS / Android<small>iOS: app nueva desde ene 2026</small></td>
+  <td class="td-val ok">110.649 / 856.026</td>
+  <td class="td-where">Product Surface → App → Installs & Devices</td>
+  <td class="td-owner">Laura Sánchez-Crespo</td>
+  <td><span class="conn conn-live">brain:product-surface/app</span></td>
+</tr>
+<tr data-seg="app" data-dim="useful" data-conn="live" data-search="NR App 1.32M 8.1% Product Surface canal retención">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🎯</span>NR App Mayo<small>Retención +110,4% YoY · Marketing +35,3%</small></td>
+  <td class="td-val ok">€1,32M (+8,1% vs LY)</td>
+  <td class="td-where">Product Surface → App</td>
+  <td class="td-owner">Javi García / Laura Sánchez-Crespo</td>
+  <td><span class="conn conn-live">brain:product-surface/app</span></td>
+</tr>
+<tr data-seg="app" data-dim="useful" data-conn="live" data-search="sesiones App 335357 Javi García Pilar 1">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🎯</span>Sesiones App (semana)</td>
+  <td class="td-val">335.357 (+9% vs LY)</td>
+  <td class="td-where">Dashboard Pilar 1</td>
+  <td class="td-owner">Javi García</td>
+  <td><span class="conn conn-live">brain:pillar/1</span></td>
+</tr>
+<tr data-seg="app" data-dim="useful" data-conn="none" data-search="zero results buscador in-app GA4 app evento">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🎯</span>Zero-results buscador in-app</td>
+  <td class="td-val alert">No existe</td>
+  <td class="td-where">— (Evento GA4 app)</td>
+  <td class="td-owner">—</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<!-- Usable App -->
+<tr data-seg="app" data-dim="usable" data-conn="live" data-search="CR App 6.73% Javi García checkout">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🖱️</span>CR App</td>
+  <td class="td-val ok">6,73%</td>
+  <td class="td-where">Dashboard Pilar 1</td>
+  <td class="td-owner">Javi García</td>
+  <td><span class="conn conn-live">brain:pillar/1</span></td>
+</tr>
+<tr data-seg="app" data-dim="usable" data-conn="live" data-search="ratio trip reserva 90.8% User Behaviour Laura Sánchez-Crespo">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🖱️</span>Ratio trip → reserva<small>De usuarios que crean un trip, 90,8% reserva</small></td>
+  <td class="td-val ok">90,8%</td>
+  <td class="td-where">Product Surface → App → User Behaviour</td>
+  <td class="td-owner">Laura Sánchez-Crespo</td>
+  <td><span class="conn conn-live">brain:product-surface/app</span></td>
+</tr>
+<tr data-seg="app" data-dim="usable" data-conn="live" data-search="trips con reserva 265618 favoritos previos 0%">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🖱️</span>Trips con reserva Mayo<small>⚠️ 0,0% tenían favoritos previos</small></td>
+  <td class="td-val">265.618</td>
+  <td class="td-where">Product Surface → App → User Behaviour</td>
+  <td class="td-owner">Laura Sánchez-Crespo</td>
+  <td><span class="conn conn-live">brain:product-surface/app</span></td>
+</tr>
+<tr data-seg="app" data-dim="usable" data-conn="live" data-search="crash rate 0.21% ANR 0.52% umbral Play Store Apps Squad">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🖱️</span>Crash rate / ANR rate<small>⚠️ ANR 0,52% > umbral Play Store 0,47%</small></td>
+  <td class="td-val alert">0,21% / 0,52%</td>
+  <td class="td-where">Play Console / Android Vitals</td>
+  <td class="td-owner">Apps Squad</td>
+  <td><span class="conn conn-api">api:playconsole</span></td>
+</tr>
+<tr data-seg="app" data-dim="usable" data-conn="live" data-search="A/B login obligatorio guest checkout CIVI-2684 Optimizely">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🖱️</span>A/B Test Login vs Guest Checkout (CIVI-2684)</td>
+  <td class="td-val">En curso</td>
+  <td class="td-where">WBR → Apps Squad</td>
+  <td class="td-owner">Laura Sánchez-Crespo</td>
+  <td><span class="conn conn-api">api:optimizely</span></td>
+</tr>
+<tr data-seg="app" data-dim="usable" data-conn="none" data-search="abandono checkout por paso app funnel mock">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🖱️</span>Abandono checkout por paso app<small>⚠️ Funnel Brain en Mock Data</small></td>
+  <td class="td-val alert">No existe</td>
+  <td class="td-where">Executive → Funnels (Design Mode)</td>
+  <td class="td-owner">Javi García</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<!-- Findable App -->
+<tr data-seg="app" data-dim="findable" data-conn="live" data-search="favoritos conversión 0% trips reserva User Behaviour">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🔍</span>Favoritos → conversión<small>⚠️ La función de favoritos no aporta a conversión</small></td>
+  <td class="td-val alert">0,0%</td>
+  <td class="td-where">Product Surface → App → User Behaviour → "Flujo de trips con reserva"</td>
+  <td class="td-owner">Laura Sánchez-Crespo</td>
+  <td><span class="conn conn-live">brain:product-surface/app</span></td>
+</tr>
+<tr data-seg="app" data-dim="findable" data-conn="live" data-search="A/B test filtros PLP App CIVI-2706 layout variantes CIVI-2693">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🔍</span>A/B Tests filtros PLP (CIVI-2706) + layout (CIVI-2693)</td>
+  <td class="td-val">En curso</td>
+  <td class="td-where">WBR → Apps Squad</td>
+  <td class="td-owner">Laura Sánchez-Crespo</td>
+  <td><span class="conn conn-api">api:optimizely</span></td>
+</tr>
+<tr data-seg="app" data-dim="findable" data-conn="none" data-search="CTR buscador in-app zero results GA4 app">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🔍</span>CTR / zero-results buscador in-app</td>
+  <td class="td-val alert">No existe</td>
+  <td class="td-where">— (Evento GA4 app)</td>
+  <td class="td-owner">—</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<!-- Desirable App -->
+<tr data-seg="app" data-dim="desirable" data-conn="live" data-search="uninstalls iOS 19187 63.5% Laura Sánchez-Crespo alerta">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">💜</span>Uninstalls iOS<small>⚠️ Ratio uninstall/install iOS = 55%</small></td>
+  <td class="td-val alert">19.187 (+63,5% vs 2025)</td>
+  <td class="td-where">Product Surface → App → Installs & Devices</td>
+  <td class="td-owner">Laura Sánchez-Crespo</td>
+  <td><span class="conn conn-live">brain:product-surface/app</span></td>
+</tr>
+<tr data-seg="app" data-dim="desirable" data-conn="live" data-search="app ratings Play Store 2.9 benchmark 4.7 4.9 Apps Squad">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">💜</span>App ratings Play Store<small>⚠️ Crónico desde ene 2026. Benchmark: 4,7–4,9</small></td>
+  <td class="td-val alert">~2,9</td>
+  <td class="td-where">Play Console</td>
+  <td class="td-owner">Apps Squad</td>
+  <td><span class="conn conn-api">api:playconsole</span></td>
+</tr>
+<tr data-seg="app" data-dim="desirable" data-conn="live" data-search="push engagement Braze v4.6.0 Javi García">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">💜</span>Push engagement (Braze)</td>
+  <td class="td-val">activo desde v4.6.0</td>
+  <td class="td-where">Braze</td>
+  <td class="td-owner">Javi García</td>
+  <td><span class="conn conn-api">api:braze</span></td>
+</tr>
+<tr data-seg="app" data-dim="desirable" data-conn="none" data-search="NPS segmento app no existe canal Javi García">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">💜</span>NPS segmento app</td>
+  <td class="td-val alert">No existe como segmento</td>
+  <td class="td-where">— (configurar filtro canal)</td>
+  <td class="td-owner">Javi García</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<!-- Credible App -->
+<tr data-seg="app" data-dim="credible" data-conn="none" data-search="CSAT canal app Zendesk filtro channel app Domingo Martín">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🛡️</span>CSAT canal app<small>Zendesk sin filtro channel=app</small></td>
+  <td class="td-val alert">Sin filtrar</td>
+  <td class="td-where">Contacts → CS Stats (filtro pendiente)</td>
+  <td class="td-owner">Domingo Martín</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<tr data-seg="app" data-dim="credible" data-conn="live" data-search="solicitud reviews CIVI-2660 Play Store Laura Sánchez-Crespo">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">🛡️</span>Solicitud reviews (CIVI-2660)<small>Lanzado 24 may. Redirección selectiva a Play Store.</small></td>
+  <td class="td-val">lanzado</td>
+  <td class="td-where">WBR → Apps Squad</td>
+  <td class="td-owner">Laura Sánchez-Crespo</td>
+  <td><span class="conn conn-api">api:playconsole</span></td>
+</tr>
+<!-- Accessible App -->
+<tr data-seg="app" data-dim="accessible" data-conn="live" data-search="VoC accesibilidad idioma canal app Zendesk">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">♿</span>VoC #accesibilidad (canal app incluido)</td>
+  <td class="td-val">activo (tag Zendesk)</td>
+  <td class="td-where">Contacts → VoC → Configure</td>
+  <td class="td-owner">Domingo Martín</td>
+  <td><span class="conn conn-live">brain:voc</span></td>
+</tr>
+<tr data-seg="app" data-dim="accessible" data-conn="none" data-search="accessibilityLabel contentDescription Dynamic Type VoiceOver TalkBack Juan Cobo">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">♿</span>accessibilityLabel / Dynamic Type / VoiceOver<small>Test manual mensual</small></td>
+  <td class="td-val alert">No existe</td>
+  <td class="td-where">— (Xcode / Android Studio)</td>
+  <td class="td-owner">Juan Cobo (Design Ops)</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<!-- Valuable App -->
+<tr data-seg="app" data-dim="valuable" data-conn="live" data-search="NR App 1.32M canal orgánico marketing retención">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">💰</span>NR App por canal<small>Orgánico €525K (−25%) · Marketing €426K (+35%) · Retención €310K (+110%)</small></td>
+  <td class="td-val ok">€1,32M (+8,1%)</td>
+  <td class="td-where">Product Surface → App → Acquisition Channels</td>
+  <td class="td-owner">Javi García / Isma García</td>
+  <td><span class="conn conn-live">brain:product-surface/app</span></td>
+</tr>
+<tr data-seg="app" data-dim="valuable" data-conn="live" data-search="LTV 12 meses 30.2 churn Laura Llamas CI-1849">
+  <td class="td-name"><span class="seg-badge sb-app">B2C App</span><span class="dim-badge">💰</span>LTV 12M / Churn<small>Churn: 30% progreso (target &lt;40,5%)</small></td>
+  <td class="td-val">€30,2 / 30%</td>
+  <td class="td-where">OKR CI-1849</td>
+  <td class="td-owner">Laura Llamas</td>
+  <td><span class="conn conn-live">brain:impact</span></td>
+</tr>
+
+<!-- ── B2B ── -->
+<tr data-seg="b2b" data-dim="useful" data-conn="live" data-search="NR Agencias 2M B2B Web Product Surface Lucía Delgado">
+  <td class="td-name"><span class="seg-badge sb-b2b">B2B</span><span class="dim-badge">🎯</span>NR Agencias Mayo<small>35,6% del mix Web total</small></td>
+  <td class="td-val ok">€2M (+6,3% vs LY)</td>
+  <td class="td-where">Product Surface → Website → B2B Channels</td>
+  <td class="td-owner">Lucía Delgado</td>
+  <td><span class="conn conn-live">brain:product-surface/website</span></td>
+</tr>
+<tr data-seg="b2b" data-dim="useful" data-conn="live" data-search="NR API afiliados 310K 27.5% Brasil 213% Product Surface">
+  <td class="td-name"><span class="seg-badge sb-b2b">B2B</span><span class="dim-badge">🎯</span>NR API (Afiliados)<small>Brasil +213% YoY</small></td>
+  <td class="td-val ok">€310K (+27,5% vs LY)</td>
+  <td class="td-where">Product Surface → API</td>
+  <td class="td-owner">Lucía Delgado</td>
+  <td><span class="conn conn-live">brain:product-surface/api</span></td>
+</tr>
+<tr data-seg="b2b" data-dim="useful" data-conn="live" data-search="agencias activas 21600 target 26000 OKR CI-1781 Lucía Delgado ON TRACK">
+  <td class="td-name"><span class="seg-badge sb-b2b">B2B</span><span class="dim-badge">🎯</span>Nº agencias activas<small>ON TRACK — 62% progreso OKR</small></td>
+  <td class="td-val ok">21.600 (target 26.000)</td>
+  <td class="td-where">OKR CI-1781 / OKR Canvas</td>
+  <td class="td-owner">Lucía Delgado</td>
+  <td><span class="conn conn-live">brain:impact</span></td>
+</tr>
+<tr data-seg="b2b" data-dim="useful" data-conn="none" data-search="buscador semántico IA agencias mayo 2026 CIVI-3261 sin métricas Marta Diaz">
+  <td class="td-name"><span class="seg-badge sb-b2b">B2B</span><span class="dim-badge">🎯</span>Tasa de éxito buscador semántico IA<small>Lanzado may 2026 (CIVI-3261). Sin baseline.</small></td>
+  <td class="td-val alert">Sin métricas</td>
+  <td class="td-where">WBR → B2B Squad / PSPA</td>
+  <td class="td-owner">Marta Diaz</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<tr data-seg="b2b" data-dim="usable" data-conn="live" data-search="tickets B2B 1206 Mayo Zendesk CS Stats Domingo Martín">
+  <td class="td-name"><span class="seg-badge sb-b2b">B2B</span><span class="dim-badge">🖱️</span>Tickets B2B Mayo</td>
+  <td class="td-val">1.206</td>
+  <td class="td-where">Contacts → CS Stats → Mayo</td>
+  <td class="td-owner">Domingo Martín</td>
+  <td><span class="conn conn-live">brain:cs-stats</span></td>
+</tr>
+<tr data-seg="b2b" data-dim="usable" data-conn="none" data-search="tasa error incidencias panel postmortem panel en blanco Marta Diaz">
+  <td class="td-name"><span class="seg-badge sb-b2b">B2B</span><span class="dim-badge">🖱️</span>Tasa error / incidencias panel<small>Postmortem panel en blanco 25/05 · errores traducción BR/EN</small></td>
+  <td class="td-val alert">Solo bug reports</td>
+  <td class="td-where">WBR → B2B Squad</td>
+  <td class="td-owner">Marta Diaz</td>
+  <td><span class="conn conn-none">sin instrumentar</span></td>
+</tr>
+<tr data-seg="b2b" data-dim="desirable" data-conn="live" data-search="NPS B2B 35 escala 0-100 VoC Brain OKR 0% Lucía Delgado">
+  <td class="td-name"><span class="seg-badge sb-b2b">B2B</span><span class="dim-badge">💜</span>NPS B2B (VoC Brain)<small>⚠️ OKR target >8 (escala 0-10) = 0% progreso</small></td>
+  <td class="td-val alert">35 / 100</td>
+  <td class="td-where">Contacts → VoC → B2B</td>
+  <td class="td-owner">Lucía Delgado / Domingo Martín</td>
+  <td><span class="conn conn-live">brain:voc/b2b</span></td>
+</tr>
+<tr data-seg="b2b" data-dim="desirable" data-conn="live" data-search="CSAT B2B 95% Zendesk CS Stats Domingo Martín">
+  <td class="td-name"><span class="seg-badge sb-b2b">B2B</span><span class="dim-badge">💜</span>CSAT B2B<small>Superior al B2C (94%). Divergencia NPS/CSAT = hallazgo.</small></td>
+  <td class="td-val ok">95%</td>
+  <td class="td-where">Contacts → CS Stats</td>
+  <td class="td-owner">Domingo Martín</td>
+  <td><span class="conn conn-live">brain:cs-stats</span></td>
+</tr>
+<tr data-seg="b2b" data-dim="credible" data-conn="live" data-search="facturación invoice VoC B2B hot topic sentiment 40 negativo Lucía Delgado">
+  <td class="td-name"><span class="seg-badge sb-b2b">B2B</span><span class="dim-badge">🛡️</span>Pain point Facturación (VoC B2B)<small>⚠️ Hot topic #1 · sentiment 40 (negativo) · "Mi factura no muestra el VAT number"</small></td>
+  <td class="td-val alert">negativo</td>
+  <td class="td-where">Contacts → VoC → B2B → Hot Topics</td>
+  <td class="td-owner">Lucía Delgado</td>
+  <td><span class="conn conn-live">brain:voc/b2b</span></td>
+</tr>
+<tr data-seg="b2b" data-dim="credible" data-conn="live" data-search="API Rate Limits VoC B2B sentiment 75 positivo">
+  <td class="td-name"><span class="seg-badge sb-b2b">B2B</span><span class="dim-badge">🛡️</span>API Rate Limits (VoC B2B)<small>Hot topic #2 · sentiment 75 (positivo)</small></td>
+  <td class="td-val ok">positivo</td>
+  <td class="td-where">Contacts → VoC → B2B</td>
+  <td class="td-owner">Lucía Delgado</td>
+  <td><span class="conn conn-live">brain:voc/b2b</span></td>
+</tr>
+<tr data-seg="b2b" data-dim="valuable" data-conn="live" data-search="revenue B2B total 2.31M agencias API CM1 ON TRACK">
+  <td class="td-name"><span class="seg-badge sb-b2b">B2B</span><span class="dim-badge">💰</span>Revenue B2B total + CM1<small>Agencias €2M + API €310K · CM1: 53% OKR ON TRACK</small></td>
+  <td class="td-val ok">€2,31M</td>
+  <td class="td-where">Product Surface → Overview</td>
+  <td class="td-owner">Lucía Delgado</td>
+  <td><span class="conn conn-live">brain:product-surface</span></td>
+</tr>
+
+        </tbody>
+      </table>
+    </div><!-- /table-wrap -->
+  </div>
+</section>
+
+<!-- ═══════════ OKRs AT RISK ═══════════ -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">02 · OKRs AT RISK</span>
+      <h2>Los que explican la narrativa de la demo</h2>
+      <p>Estos son los OKRs de experiencia con 0% de progreso que el dashboard puede empezar a explicar. Son la tesis del "¿por qué no sabemos por qué?" que Claude responde en el MBR.</p>
+    </div>
+    <div class="alert-grid">
+      <div class="alert-card">
+        <div class="alert-val">0%</div>
+        <div class="alert-name">NPS B2C &gt; 9,4</div>
+        <div class="alert-detail">Actual: 9,3. Cuatro MBRs consecutivos sin avance. Owner: Javi García (CI-1634). Brain: pillar/1</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-val">0%</div>
+        <div class="alert-name">AOV B2C: 137€ → 142€</div>
+        <div class="alert-detail">Actual: €135. El ejemplo del MBR de Marzo. Owner: Javi García (CI-1634). Brain: pillar/1</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-val">0%</div>
+        <div class="alert-name">NPS B2B &gt; 8</div>
+        <div class="alert-detail">NPS B2B real: 35/100 (Brain VoC). Encuesta oficial no activa aún. Owner: Lucía Delgado (CI-1781)</div>
+      </div>
+      <div class="alert-card warn">
+        <div class="alert-val">25%</div>
+        <div class="alert-name">LTV 12M: 29,36€ → 32,5€</div>
+        <div class="alert-detail">Actual: €30,2. Owner: Laura Llamas (CI-1849). Brain: impact</div>
+      </div>
+      <div class="alert-card warn">
+        <div class="alert-val">20%</div>
+        <div class="alert-name">Calidad media tours &gt; 9,2</div>
+        <div class="alert-detail">Owner: Arturo Moreno (CI-1614). Brain: impact</div>
+      </div>
+      <div class="alert-card ok">
+        <div class="alert-val">73%</div>
+        <div class="alert-name">CR B2C: 3,9% → 4,3%</div>
+        <div class="alert-detail">Actual: 4,12%. En ruta. Owner: Javi García (CI-1634). Brain: pillar/1</div>
+      </div>
+    </div>
+
+    <div class="sec-head" style="margin-top:40px">
+      <span class="sec-num">03 · Alertas activas en Brain</span>
+      <h2>Señales de deterioro detectadas</h2>
+    </div>
+    <div class="alert-grid">
+      <div class="alert-card">
+        <div class="alert-val">+63,5%</div>
+        <div class="alert-name">Uninstalls iOS vs 2025</div>
+        <div class="alert-detail">Ratio uninstall/install iOS = 55%. Fuente: Product Surface → App → Installs. Dimensión: Desirable App</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-val">0,52%</div>
+        <div class="alert-name">ANR rate &gt; umbral Play Store</div>
+        <div class="alert-detail">Umbral: 0,47%. Fuente: Play Console. Dimensión: Usable App. Apps Squad.</div>
+      </div>
+      <div class="alert-card">
+        <div class="alert-val">2,9★</div>
+        <div class="alert-name">App ratings Play Store</div>
+        <div class="alert-detail">Benchmark: 4,7–4,9. Crónico desde ene 2026. Dimensión: Desirable App</div>
+      </div>
+      <div class="alert-card warn">
+        <div class="alert-val">0,0%</div>
+        <div class="alert-name">Favoritos → conversión</div>
+        <div class="alert-detail">De 265.618 trips con reserva, solo 25 tenían favoritos. La feature no tracciona. Dimensión: Findable App</div>
+      </div>
+      <div class="alert-card warn">
+        <div class="alert-val">⛔</div>
+        <div class="alert-name">PIX Brasil + Mercado Pago MX</div>
+        <div class="alert-detail">CIVI-2092/2089 bloqueados. Impacto Credible LATAM. Hector Castillo (Payments)</div>
+      </div>
+      <div class="alert-card warn">
+        <div class="alert-val">⚠️</div>
+        <div class="alert-name">VoC sin Strategic Themes</div>
+        <div class="alert-detail">Las anécdotas B2C no filtran hasta configurar. 10 min de trabajo. Owner: Domingo Martín</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ VOC TAXONOMY ═══════════ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">04 · Taxonomía VoC</span>
+      <h2>50 tags de Zendesk mapeados a dimensiones</h2>
+      <p>Disponibles en <code style="font-family:var(--mono);font-size:13px;background:var(--surface);padding:2px 6px;border-radius:4px">brain.civitatis.tech/contacts/voc/configuration</code>. Configurar Strategic Themes antes del hackathon.</p>
+    </div>
+    <div class="callout warn">
+      <div class="callout-label">Acción antes del hackathon</div>
+      <p>Entrar en <strong>Contacts → VoC → Configure</strong> y asignar los tags de interés como "Strategic Themes". Sin esto, la sección de Anécdotas B2C sale vacía y las dimensiones Credible y Accessible no muestran señal cualitativa. Tiempo: 10 minutos. Owner: Domingo Martín.</p>
+    </div>
+    <table class="voc-table">
+      <thead>
+        <tr><th>Tag Zendesk</th><th>Grupo en Brain</th><th>Dimensión</th><th>Segmento</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="voc-tag">#accesibilidad</td><td>Preventa → actividades</td><td>♿ Accessible</td><td>B2C Web/App</td></tr>
+        <tr><td class="voc-tag">#idioma</td><td>Preventa → actividades</td><td>♿ Accessible</td><td>B2C Web/App</td></tr>
+        <tr><td class="voc-tag">#problemas_para_el_pago</td><td>Problemas web</td><td>🛡️ Credible</td><td>B2C Web</td></tr>
+        <tr><td class="voc-tag">#problemas_app</td><td>Problemas web</td><td>🖱️ Usable</td><td>B2C App</td></tr>
+        <tr><td class="voc-tag">#problemas_actividades_integradas</td><td>Problemas web</td><td>🖱️ Usable</td><td>B2C Web/App</td></tr>
+        <tr><td class="voc-tag">#informacion_erronea_en_web</td><td>Problemas web</td><td>🛡️ Credible</td><td>B2C Web</td></tr>
+        <tr><td class="voc-tag">#metodos_de_pago_disponibles</td><td>Medios de pago</td><td>🛡️ Credible</td><td>B2C Web/App</td></tr>
+        <tr><td class="voc-tag">#punto_de_encuentro</td><td>Preventa → actividades</td><td>🔍 Findable</td><td>B2C Web/App</td></tr>
+        <tr><td class="voc-tag">#dudas_proceso_de_reserva_</td><td>Preventa → actividades</td><td>🖱️ Usable</td><td>B2C Web/App</td></tr>
+        <tr><td class="voc-tag">#consulta_precios</td><td>Preventa → actividades</td><td>🛡️ Credible</td><td>B2C Web/App</td></tr>
+        <tr><td class="voc-tag">#baja_calidad_del_servicio</td><td>Post-Travel → Reclamaciones</td><td>🎯 Útil</td><td>B2C</td></tr>
+        <tr><td class="voc-tag">#incumplimiento_del_servicio</td><td>Post-Travel → Reclamaciones</td><td>🎯 Útil</td><td>B2C</td></tr>
+        <tr><td class="voc-tag">#punto_de_encuentro_incorrecto</td><td>Post-Travel → Reclamaciones</td><td>🔍 Findable</td><td>B2C</td></tr>
+        <tr><td class="voc-tag">#estado_del_reembolso</td><td>Postventa → Pagos</td><td>🛡️ Credible</td><td>B2C</td></tr>
+        <tr><td class="voc-tag">#no_show_transfer</td><td>Post-Travel</td><td>🖱️ Usable</td><td>B2C</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════ PREGUNTAS HORA 0 ═══════════ -->
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">05 · Preguntas para la hora 0</span>
+      <h2>Las 5 preguntas que desbloquean el día 1</h2>
+      <p>Resolverlas la primera hora del hackathon con la persona de Data. Sin respuesta, algunas conexiones no son posibles.</p>
+    </div>
+    <div class="q-list">
+      <div class="q-item">
+        <span class="q-num">P1</span>
+        <div><div class="q-text">¿Brain expone API/endpoint REST para leer sus métricas directamente, o hay que ir a BigQuery raw?</div><div class="q-owner">Owner: persona Data del equipo + owner de Brain</div></div>
+      </div>
+      <div class="q-item">
+        <span class="q-num">P2</span>
+        <div><div class="q-text">¿El VoC Explorer de Brain permite query programática por tag + mes + sentimiento?</div><div class="q-owner">Owner: persona Data del equipo</div></div>
+      </div>
+      <div class="q-item">
+        <span class="q-num">P3</span>
+        <div><div class="q-text">¿El proyecto Dashboard 360º App (reto paralelo del hackathon) expondrá sus tablas en BigQuery para consumirlas?</div><div class="q-owner">Owner: equipo del reto Growth App</div></div>
+      </div>
+      <div class="q-item">
+        <span class="q-num">P4</span>
+        <div><div class="q-text">¿NPS/CSAT en Brain pueden segmentarse por surface (web vs app) o requiere reconfigurar la encuesta?</div><div class="q-owner">Owner: Arturo Moreno / Javi García</div></div>
+      </div>
+      <div class="q-item">
+        <span class="q-num">P5</span>
+        <div><div class="q-text">¿Están los Strategic Themes del VoC configurados en Brain antes del hackathon?</div><div class="q-owner">Owner: Domingo Martín — 10 minutos de trabajo</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <svg viewBox="0 0 80 20" xmlns="http://www.w3.org/2000/svg" aria-label="Civitatis">
+        <text x="0" y="15" font-family="Montserrat, sans-serif" font-weight="700" font-size="14">civitatis</text>
+      </svg>
+    </div>
+    <div class="footer-text">
+      <strong>Brain Data Map</strong> · Hackathon Civitatis · Publicado: 2 jun 2026<br>
+      Datos a: 1 jun 2026 · brain.civitatis.tech
+    </div>
+  </div>
+</footer>
+
+<script>
+// ─── FILTER ENGINE ────────────────────────────────────────────────
+const rows = Array.from(document.querySelectorAll('#main-table tbody tr'));
+let activeSeg = 'all', activeDim = 'all', activeConn = 'all', searchQuery = '';
+
+function applyFilters() {
+  let visible = 0;
+  rows.forEach(row => {
+    const seg  = row.dataset.seg;
+    const dim  = row.dataset.dim;
+    const conn = row.dataset.conn;
+    const txt  = (row.dataset.search || '').toLowerCase();
+
+    const matchSeg  = activeSeg  === 'all' || seg  === activeSeg;
+    const matchDim  = activeDim  === 'all' || dim  === activeDim;
+    const matchConn = activeConn === 'all' ||
+                      (activeConn === 'live' && (conn === 'live' || conn === 'api' || conn === 'pending')) ||
+                      (activeConn === 'none' && conn === 'none');
+    const matchSearch = !searchQuery || txt.includes(searchQuery);
+
+    const show = matchSeg && matchDim && matchConn && matchSearch;
+    row.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  const label = document.getElementById('count-label');
+  if (label) label.textContent = `${visible} resultado${visible !== 1 ? 's' : ''}`;
+}
+
+document.querySelectorAll('.chip[data-filter]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const filter = chip.dataset.filter;
+    const val    = chip.dataset.val;
+
+    // update active chip in same filter group
+    document.querySelectorAll(`.chip[data-filter="${filter}"]`).forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+
+    if (filter === 'seg')  activeSeg  = val;
+    if (filter === 'dim')  activeDim  = val;
+    if (filter === 'conn') activeConn = val;
+
+    applyFilters();
+  });
+});
+
+const searchInput = document.getElementById('search-input');
+if (searchInput) {
+  searchInput.addEventListener('input', e => {
+    searchQuery = e.target.value.toLowerCase().trim();
+    applyFilters();
+  });
+}
+
+applyFilters();
+</script>
+</body>
+</html>
