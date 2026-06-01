@@ -48,14 +48,14 @@ El **UX Quality Dashboard** es la lente UX sobre Brain. No construye un ETL nuev
 | Archivo | Qué es | Cuándo usarlo |
 |---|---|---|
 | [`brain-data-map.md`](brain-data-map.md) | Mapa de 97 KPIs: para cada dato — dónde está en Brain, quién es el responsable, cómo extraerlo y a qué dimensión Honeycomb pertenece. Con OKRs AT RISK, alertas activas y taxonomía VoC. | **Referencia principal durante el hackathon** — consultar antes de buscar un dato en cualquier herramienta. |
-| [`brain-data-map-viewer.html`](brain-data-map-viewer.html) | Viewer interactivo del brain-data-map — filtrable por segmento (B2C Web / App / B2B), dimensión y estado del conector (live / sin instrumentar) | Abrir en el navegador el día del hackathon para localizar datos rápidamente. |
+| [`brain-data-map-viewer.html`](https://jota-erre-coto.github.io/ux-quality-dashboard-hackathon/brain-data-map-viewer.html) | Viewer interactivo del brain-data-map — filtrable por segmento (B2C Web / App / B2B), dimensión y estado del conector (live / sin instrumentar) | Abrir en el navegador el día del hackathon para localizar datos rápidamente. |
 
 ### Propuesta del reto
 
 | Archivo | Qué es | Cuándo usarlo |
 |---|---|---|
 | [`hackathon-proposal-v2.md`](hackathon-proposal-v2.md) | Propuesta completa en markdown — problema con datos reales, oportunidad Brain, solución (2 vistas + MCP), plan 48h, métricas de éxito, equipo, riesgos | Fuente de verdad de la propuesta en texto plano. |
-| [`hackathon-proposal.html`](hackathon-proposal.html) | One-pager visual (Odisea design system) — para presentar al jurado. Hero, secciones con datos reales, terminal MCP, plan 48h, equipo. | Abrir en el navegador para la presentación al jurado. |
+| [`hackathon-proposal.html`](https://jota-erre-coto.github.io/ux-quality-dashboard-hackathon/hackathon-proposal.html) | One-pager visual (Odisea design system) — para presentar al jurado. Hero, secciones con datos reales, terminal MCP, plan 48h, equipo. | Abrir en el navegador para la presentación al jurado. |
 | [`hackathon-brain-panel.md`](hackathon-brain-panel.md) | Versión texto para pegar en el panel de retos de Brain — mismo formato que el resto de retos del hackathon | Copiar y pegar en Brain antes del 2 de junio. |
 
 ---
