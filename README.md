@@ -29,6 +29,12 @@ El **UX Quality Dashboard** es la lente UX sobre Brain. No construye un ETL nuev
 
 ## Archivos del repositorio
 
+### Punto de entrada
+
+| Archivo | Qué es | Cuándo usarlo |
+|---|---|---|
+| [`index.html`](index.html) · [🌐 ver en web](https://jota-erre-coto.github.io/ux-quality-dashboard-hackathon/) | Landing de GitHub Pages — enlaza todas las herramientas y documentación del reto con una descripción de cada una | **Empezar aquí** — compartir esta URL con el equipo como punto de acceso único |
+
 ### Documentación de referencia
 
 | Archivo | Qué es | Cuándo leerlo |
