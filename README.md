@@ -67,8 +67,7 @@ El **UX Quality Dashboard** es la lente UX sobre Brain. No construye un ETL nuev
 1. Leer la [propuesta del reto](https://jota-erre-coto.github.io/ux-quality-dashboard-hackathon/hackathon-proposal.html) — problema, solución y plan. Es el punto de partida compartido.
 2. Abrir el [Brain Data Map Viewer](https://jota-erre-coto.github.io/ux-quality-dashboard-hackathon/brain-data-map-viewer.html) en el navegador — es la referencia de datos durante todo el hackathon.
 3. Acordar con el equipo el **JSON de contrato** (ver `ux-quality-dashboard-model-v2.md` §6) — es la interfaz entre la Pista Data y la Pista Producto.
-4. Resolver las **5 preguntas de la hora 0** (ver `brain-data-map.md` §9 o el viewer §05).
-5. Arrancar las **dos pistas en paralelo** — nadie bloquea a nadie.
+4. Arrancar las **dos pistas en paralelo** — nadie bloquea a nadie.
 
 ### Pista Data (persona de Data)
 
